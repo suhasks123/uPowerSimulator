@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
 	read_asm();
 	pass_1_text();
 	pass_1_data();
+	sym_table_to_files();
 	pass_2();
 	return 0;
 }
@@ -103,9 +104,24 @@ void pass_1_text()
 	}
 }
 
-/*void pass_1_data()
+/*
+ * In the case of this assembler, the data is declared in the
+ * following format:
+ * .data
+ * <label-name>:
+ * <assembler-directive> <data>
+ * 
+ * For example,
+ * .data
+ * numbers:
+ * .word 1, 2, 3, 4, 5, 6
+ */
+
+void pass_1_data()
 {
 	int flag = 0, i;
+	char *token;
+	char *data_type, *data;
 	for(i=0;i<n_lines;i++)
 	{
 		if(strcmp(f_lines[i]->asm_line, ".data") == 0)
@@ -128,7 +144,7 @@ void pass_1_text()
 	        f_lines[i]->asm_line[0] != '\n')
 		{
 			// Check for label
-			if(f_lines[i]->asm_line[strlen(f_lines[i]->asm_line)-1]==':')
+			if(f_lines[i]->asm_line[strlen(f_lines[i]->asm_line)-1] == ':')
 			{
 				f_lines[i]->type = 'L';
 				struct symbol_table_data *s_temp;
@@ -138,12 +154,22 @@ void pass_1_text()
 				char lname[sizeof(f_lines[i]->asm_line)];
 				strcpy(lname, f_lines[i]->asm_line);
 				lname[strlen(lname)-1] = '\0';
+
+				// Move on to the next line
+				i++;
+
+				//Tokenization
+				token = strtok(f_lines[i], " ");
+				data_type = token;
+				token = strtok(NULL, " ");
+				data = token;
 				
 				// Add data to the symbol table entry and connect it to the table
 				s_temp->label = lname;
-				s_temp->rel_add = n_instr;
-				s_temp->next = sym_tab_text_head;
-				sym_tab_text_head = s_temp;
+				s_temp->type = data_type;
+				s_temp->data = data;
+				s_temp->next = sym_tab_data_head;
+				sym_tab_data_head = s_temp;
 				continue;
 			}
 
@@ -153,12 +179,9 @@ void pass_1_text()
 				f_lines[i]->type = 'C';
 				continue;
 			}
-			
-			// n_instr is the number of instructions actually written to the binary
-			n_instr++;
 		}
 	}
-}*/
+}
 
 
 void pass_2()
@@ -237,4 +260,27 @@ char check_instruction_type(char *inst)
 	else
 		return 'I';
 
+}
+
+void sym_table_to_files()
+{
+	struct symbol_table_text *s_temp_text;
+	s_temp_text = sym_tab_text_head;
+	text_sym  = fopen("text.sym", "w");
+	while (s_temp != NULL)
+	{
+		fprintf(text_sym, "%s#%d", s_temp_text->label, s_temp_text->rel_add);
+		s_temp_text = s_temp_text->next;
+	}
+
+	struct symbol_table_data *s_temp_data;
+	s_temp_data = sym_tab_data_head;
+	data_sym  = fopen("data.sym", "w");
+	while (s_temp != NULL)
+	{
+		fprintf(data_sym, "%s#%s#%s", s_temp_data->label, s_temp_data->type, s_temp_data->data);
+		s_temp_data = s_temp_data->next;
+	}
+
+	return;
 }

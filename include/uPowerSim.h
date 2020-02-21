@@ -45,7 +45,20 @@ struct symbol_table_text
 struct symbol_table_data
 {
     char *label;
-    void *add;
+
+    /*
+     * asciiz - Null terminated string
+     * word - stores a set of words in successive words in
+     * memory.
+     */
+    char *type;
+
+    /* The data is written as a string to the data symbol
+     * table file.
+     * It is then converted back to its original type using
+     * sscanf().
+     */
+    char *data;
     struct symbol_table_data *next;
 };
 
@@ -59,6 +72,8 @@ sym_table_data_head = NULL;
 //Global Variables
 FILE *asm_file;
 FILE *bin_file;
+FILE *text_sym;
+FILE *data_sym;
 struct cmdline cmd;
 struct line f_lines[100];
 struct instr_line i_lines[100];
