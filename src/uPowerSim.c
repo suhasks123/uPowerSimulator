@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<stdint.h>
 
 #include "uPowerSim.h"
 
@@ -102,7 +103,7 @@ void pass_1_text()
 	}
 }
 
-void pass_1_data()
+/*void pass_1_data()
 {
 	int flag = 0, i;
 	for(i=0;i<n_lines;i++)
@@ -122,7 +123,7 @@ void pass_1_data()
 			continue;
 		}
 
-		// If the line is under .text and is not blank or newline
+		// If the line is under .data and is not blank or newline
 		if(flag == 1 && f_lines[i]->asm_line[0] != '\0' &&
 	        f_lines[i]->asm_line[0] != '\n')
 		{
@@ -130,8 +131,8 @@ void pass_1_data()
 			if(f_lines[i]->asm_line[strlen(f_lines[i]->asm_line)-1]==':')
 			{
 				f_lines[i]->type = 'L';
-				struct symbol_table_text *s_temp;
-				s_temp = (struct symbol_table_text *)malloc(sizeof(struct symbol_table_text));
+				struct symbol_table_data *s_temp;
+				s_temp = (struct symbol_table_data *)malloc(sizeof(struct symbol_table_data));
 				
 				// Create a string with the label name without ':'
 				char lname[sizeof(f_lines[i]->asm_line)];
@@ -157,11 +158,49 @@ void pass_1_data()
 			n_instr++;
 		}
 	}
-}
+}*/
 
 
 void pass_2()
 {
+	int i;
+	int32_t instr_hex;
+	bin_file = fopen("upower.bin", "w");
+	for (i = 0;i < n_instr;i++)
+	{
+		instr_hex = translate_instr(i_lines[i]);
+		fprintf(bin_file, "%x\n", instr_hex);
+	}
+}
+
+/*
+ * This function is called for every text instructon.
+ * Every instruction is first parsed using strtok.
+ * Then the specialized functions in instr_translator.c are
+ * called depending on the instruction.
+ */
+int32_t translate_instr(char *instr);
+{
+	int i = 0, instr_c = 0;
+	int32_t instr_hex;
+	char *token;
+	char instr_v[10][100];
+	
+	//Tokenization
+	token = strtok(instr, ", ");
+	while (token != NULL)
+	{
+		instr_v[i] = token;
+		instr_c++;
+		token = strtok(NULL, ", ");
+	}
+
+	//Add new 'if' condition for adding a new instruction 
+	if (strcmp(instr_v[0], "add") == 0)
+		instr_hex = add(instr_c, instr_v);
+
+	return instr_hex;
+
 	
 }
 

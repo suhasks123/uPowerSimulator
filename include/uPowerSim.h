@@ -25,7 +25,7 @@ struct line
 struct instr_line
 {
     char *asm_line;
-}
+};
 
 
 /*
@@ -57,7 +57,8 @@ sym_table_data_head = NULL;
 //sym_table_current = NULL;
 
 //Global Variables
-FILE * asm_file;
+FILE *asm_file;
+FILE *bin_file;
 struct cmdline cmd;
 struct line f_lines[100];
 struct instr_line i_lines[100];
