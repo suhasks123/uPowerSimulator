@@ -1,26 +1,13 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdint.h>
-
-#include "uPowerSim.h"
-
-/*
- * Add new instruction translation functions for adding
- * new instructions
- */
-
-#include<stdio.h>
-#include<stdlib.h>
-#include<stdint.h>
 #include <string.h>
-#include "uPowerSim.h"
 
-/*
- * Add new instruction translation functions for adding
- * new instructions
- */
+int i;
+char temp[33];
 
-char* register_translator(char* t)
+
+char* register_translator(char* t)  // 5 bit representations of register numbers
 {
     if(strcmp(t,"R1")==0)
         return "00001";
@@ -86,14 +73,27 @@ char* register_translator(char* t)
         return "11111";
 }
 
+void src_trgts_reg_translate_for_x_format(char* instr_v[])  //utility function for binsry encoding of the registers in the instruction
+{
+    char* temp1=register_translator(instr_v[1]);
+    for(i=6;i<=10;i++)
+        temp[i]=temp1[i-6];
+    temp1=register_translator(instr_v[2]);
+    for(i=11;i<=15;i++)
+        temp[i]=temp1[i-11];
+    temp1=register_translator(instr_v[3]);
+    for(i=16;i<=20;i++)
+        temp[i]=temp1[i-16];
+}
+
 
 
 int32_t and(int instr_c, char *instr_v[])  // X format
 {
     int32_t instr_hex;
-    char temp[32];
-    // PO  11111
-    for(i=0;i<=5;i++)
+    // PO  011111
+    temp[0]='0';
+    for(i=1;i<=5;i++)
     {
         temp[i]='1';
     }
@@ -113,16 +113,125 @@ int32_t and(int instr_c, char *instr_v[])  // X format
     temp[31]='0';
 
     //RS RA RB
-    char* temp1=register_translator(char* instr_v[1]);
-    for(i=6;i<=10;i++)
-        temp[i]=temp1[i-6];
-    temp1=register_translator(char* instr_v[2]);
-    for(i=11;i<=15;i++)
-        temp[i]=temp1[i-11];
-    temp1=register_translator(char* instr_v[3]);
-    for(i=16;i<=20;i++)
-        temp[i]=temp1[i-16];
-        
-    sscanf(temp,"%d",&instr_hex);
+    src_trgts_reg_translate_for_x_format(instr_v);
+
+    temp[32]='\0';    
+      //sscanf(temp,"%d",&instr_hex);
     return instr_hex;
 }
+
+int32_t nand(int instr_c, char *instr_v[])  // X format
+{
+    int32_t instr_hex;
+    
+    //PO 011111
+   temp[0]='0';
+   for(i=1;i<=5;i++)
+   {
+       temp[i]='1';
+   }
+
+    //XO   0111011100
+    temp[21]='0';
+    for(i=22;i<=24;i++)
+    {
+        temp[i]='1';
+    }
+    temp[25]='0';
+    for(i=26;i<=28;i++)
+    {
+        temp[i]='1';
+    }
+    temp[29]='0';
+    temp[30]='0';
+
+    //Rc
+    temp[31]='0';
+
+    //RS RA RB
+    src_trgts_reg_translate_for_x_format(instr_v);
+
+    temp[32]='\0';    
+      //sscanf(temp,"%d",&instr_hex);
+    return instr_hex;
+}
+
+int32_t or(int instr_c, char *instr_v[])    // X format
+{
+    int32_t instr_hex;
+    
+    //PO 011111
+    temp[0]='0';
+    for(i=1;i<=5;i++)
+    {
+        temp[i]='1';
+    }
+
+    //XO 0110111100
+    temp[21]='0';
+    temp[22]='1';
+    temp[23]='1';
+    temp[24]='0';
+    for(i=25;i<=28;i++)
+    {
+        temp[i]='1';
+    }
+    temp[29]='0';
+    temp[30]='0';
+
+    //Rc
+    temp[31]='0';
+
+    //RS RA RB
+     src_trgts_reg_translate_for_x_format(instr_v);
+
+    temp[32]='\0'; 
+      //sscanf(temp,"%d",&instr_hex);
+    return instr_hex;
+}
+
+int32_t xor(int instr_c, char *instr_v[])  // X format
+{
+    int32_t instr_hex;
+    
+    //PO 011111
+    temp[0]='0';
+    for(i=1;i<=5;i++)
+    {
+        temp[i]='1';
+    }
+
+    //XO 0100111100
+    temp[21]='0';
+    temp[22]='1';
+    temp[23]='0';
+    temp[24]='0';
+    for(i=25;i<=28;i++)
+    {
+        temp[i]='1';
+    }
+    temp[29]='0';
+    temp[30]='0';
+
+    //Rc
+    temp[31]='0';
+
+    //RS RA RB
+    src_trgts_reg_translate_for_x_format(instr_v);
+
+    temp[32]='\0'; 
+    //sscanf(temp,"%d",&instr_hex);
+    return instr_hex;
+}
+
+
+
+// int main() //for testing
+// {
+//     int instr_c=4;
+//     char* instr_v[]={"nand","R1","R2","R3"};
+//     puts(instr_v[0]);
+//     printf("%d\n",xor(instr_c,instr_v));
+//     puts(temp);
+//     return 0;
+// }
