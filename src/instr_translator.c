@@ -1,13 +1,16 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdint.h>
-#include <string.h>
+#include<string.h>
+
+#include "uPowerSim.h"
 
 int i;
-char temp[33];
 
+char temp[33]; // stores the binary encoding of the instructions
 
-char* register_translator(char* t)  // 5 bit representations of register numbers
+//function to compute the 5 bit representations of register numbers
+char* register_translator(char* t)  
 {
     if(strcmp(t,"R1")==0)
         return "00001";
@@ -73,7 +76,9 @@ char* register_translator(char* t)  // 5 bit representations of register numbers
         return "11111";
 }
 
-void src_trgts_reg_translate_for_x_format(char* instr_v[])  //utility function for binsry encoding of the registers in the instruction
+/*utility function for binary encoding
+  of the registers in the instruction */
+void src_trgts_reg_translate_for_x_format(char* instr_v[])  
 {
     char* temp1=register_translator(instr_v[1]);
     for(i=6;i<=10;i++)
@@ -81,16 +86,27 @@ void src_trgts_reg_translate_for_x_format(char* instr_v[])  //utility function f
     temp1=register_translator(instr_v[2]);
     for(i=11;i<=15;i++)
         temp[i]=temp1[i-11];
-    temp1=register_translator(instr_v[3]);
-    for(i=16;i<=20;i++)
-        temp[i]=temp1[i-16];
+    
+    if(strcmp(instr_v[0],"extsw")!=0)
+    {
+        temp1=register_translator(instr_v[3]);
+        for(i=16;i<=20;i++)
+            temp[i]=temp1[i-16];
+    }
+
+    else
+    {
+        for(i=16;i<=20;i++)
+            temp[i]='0';
+    }   
 }
 
-
-
-int32_t and(int instr_c, char *instr_v[])  // X format
+// and instruction
+// X format
+int32_t and(int instr_c, char *instr_v[])  
 {
     int32_t instr_hex;
+
     // PO  011111
     temp[0]='0';
     for(i=1;i<=5;i++)
@@ -98,7 +114,7 @@ int32_t and(int instr_c, char *instr_v[])  // X format
         temp[i]='1';
     }
 
-    //XO  0000011100
+    // XO  0000011100
     for(i=21;i<=25;i++)
     {
         temp[i]='0';
@@ -109,29 +125,32 @@ int32_t and(int instr_c, char *instr_v[])  // X format
     }
     temp[29]='0';
     temp[30]='0';
-    //Rc
+
+    // Rc
     temp[31]='0';
 
-    //RS RA RB
+    // RS RA RB
     src_trgts_reg_translate_for_x_format(instr_v);
 
     temp[32]='\0';    
-      //sscanf(temp,"%d",&instr_hex);
+    //sscanf(temp,"%d",&instr_hex);
     return instr_hex;
 }
 
-int32_t nand(int instr_c, char *instr_v[])  // X format
+// nand instruction
+// X format
+int32_t nand(int instr_c, char *instr_v[])
 {
     int32_t instr_hex;
     
-    //PO 011111
+    // PO 011111
    temp[0]='0';
    for(i=1;i<=5;i++)
    {
        temp[i]='1';
    }
 
-    //XO   0111011100
+    // XO   0111011100
     temp[21]='0';
     for(i=22;i<=24;i++)
     {
@@ -145,29 +164,31 @@ int32_t nand(int instr_c, char *instr_v[])  // X format
     temp[29]='0';
     temp[30]='0';
 
-    //Rc
+    // Rc
     temp[31]='0';
 
-    //RS RA RB
+    // RS RA RB
     src_trgts_reg_translate_for_x_format(instr_v);
 
     temp[32]='\0';    
-      //sscanf(temp,"%d",&instr_hex);
+    //sscanf(temp,"%d",&instr_hex);
     return instr_hex;
 }
 
-int32_t or(int instr_c, char *instr_v[])    // X format
+// or instruction
+// X format
+int32_t or(int instr_c, char *instr_v[])
 {
     int32_t instr_hex;
     
-    //PO 011111
+    // PO 011111
     temp[0]='0';
     for(i=1;i<=5;i++)
     {
         temp[i]='1';
     }
 
-    //XO 0110111100
+    // XO 0110111100
     temp[21]='0';
     temp[22]='1';
     temp[23]='1';
@@ -179,29 +200,31 @@ int32_t or(int instr_c, char *instr_v[])    // X format
     temp[29]='0';
     temp[30]='0';
 
-    //Rc
+    // Rc
     temp[31]='0';
 
-    //RS RA RB
+    // RS RA RB
      src_trgts_reg_translate_for_x_format(instr_v);
 
     temp[32]='\0'; 
-      //sscanf(temp,"%d",&instr_hex);
+    //sscanf(temp,"%d",&instr_hex);
     return instr_hex;
 }
 
-int32_t xor(int instr_c, char *instr_v[])  // X format
+// xor instruction
+// X format
+int32_t xor(int instr_c, char *instr_v[])
 {
     int32_t instr_hex;
     
-    //PO 011111
+    // PO 011111
     temp[0]='0';
     for(i=1;i<=5;i++)
     {
         temp[i]='1';
     }
 
-    //XO 0100111100
+    // XO 0100111100
     temp[21]='0';
     temp[22]='1';
     temp[23]='0';
@@ -213,10 +236,10 @@ int32_t xor(int instr_c, char *instr_v[])  // X format
     temp[29]='0';
     temp[30]='0';
 
-    //Rc
+    // Rc
     temp[31]='0';
 
-    //RS RA RB
+    // RS RA RB
     src_trgts_reg_translate_for_x_format(instr_v);
 
     temp[32]='\0'; 
@@ -224,14 +247,146 @@ int32_t xor(int instr_c, char *instr_v[])  // X format
     return instr_hex;
 }
 
+// extsw instruction
+// X format
+int32_t extsw(int instr_c, char *instr_v[])
+{
+    int32_t instr_hex;
+    
+    // PO 011111
+    temp[0]='0';
+    for(i=1;i<=5;i++)
+    {
+        temp[i]='1';
+    }
 
+    // XO 1111011010
+    for(i=21;i<=24;i++)
+    {
+        temp[i]='1';
+    }
+    temp[25]='0';
+    temp[26]='1';
+    temp[27]='1';
+    temp[28]='0';
+    temp[29]='1';
+    temp[30]='0';
 
-// int main() //for testing
-// {
-//     int instr_c=4;
-//     char* instr_v[]={"nand","R1","R2","R3"};
-//     puts(instr_v[0]);
-//     printf("%d\n",xor(instr_c,instr_v));
-//     puts(temp);
-//     return 0;
-// }
+    // Rc
+    temp[31]='0';
+
+    // RS RA RB
+    src_trgts_reg_translate_for_x_format(instr_v);
+
+    temp[32]='\0'; 
+    //sscanf(temp,"%d",&instr_hex);
+    return instr_hex;
+}
+
+// sld instruction
+// X format
+int32_t sld(int instr_c, char *instr_v[])
+{
+    int32_t instr_hex;
+    
+    // PO 011111
+    temp[0]='0';
+    for(i=1;i<=5;i++)
+    {
+        temp[i]='1';
+    }
+
+    // XO 0000011011
+    for(i=21;i<=25;i++)
+    {
+        temp[i]='0';
+    }
+    temp[26]='1';
+    temp[27]='1';
+    temp[28]='0';
+    temp[29]='1';
+    temp[30]='1';
+
+    // Rc
+    temp[31]='0';
+
+    // RS RA RB
+    src_trgts_reg_translate_for_x_format(instr_v);
+
+    temp[32]='\0'; 
+    //sscanf(temp,"%d",&instr_hex);
+    return instr_hex;
+}
+
+// srd instruction
+// X format
+int32_t srd(int instr_c, char *instr_v[])
+{
+    int32_t instr_hex;
+    
+    // PO 011111
+    temp[0]='0';
+    for(i=1;i<=5;i++)
+    {
+        temp[i]='1';
+    }
+
+    // XO 1000011011
+    temp[21]='1';
+    for(i=22;i<=25;i++)
+    {
+        temp[i]='0';
+    }
+    temp[26]='1';
+    temp[27]='1';
+    temp[28]='0';
+    temp[29]='1';
+    temp[30]='1';
+
+    // Rc
+    temp[31]='0';
+
+    // RS RA RB
+    src_trgts_reg_translate_for_x_format(instr_v);
+
+    temp[32]='\0'; 
+    //sscanf(temp,"%d",&instr_hex);
+    return instr_hex;
+}
+
+// srad instruction
+// X format
+int32_t srad(int instr_c, char *instr_v[])
+{
+    int32_t instr_hex;
+    
+    // PO 011111
+    temp[0]='0';
+    for(i=1;i<=5;i++)
+    {
+        temp[i]='1';
+    }
+
+    // XO 1100011010
+    temp[21]='1';
+    temp[22]='1';
+    for(i=23;i<=25;i++)
+    {
+        temp[i]='0';
+    }
+    temp[26]='1';
+    temp[27]='1';
+    temp[28]='0';
+    temp[29]='1';
+    temp[30]='0';
+
+    // Rc
+    temp[31]='0';
+
+    // RS RA RB
+    src_trgts_reg_translate_for_x_format(instr_v);
+
+    temp[32]='\0'; 
+    //sscanf(temp,"%d",&instr_hex);
+    return instr_hex;
+}
