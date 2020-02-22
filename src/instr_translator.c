@@ -76,7 +76,7 @@ char* register_translator(char* t) // 5 bit representations of register numbers
 }
 
 /* utility function for binary encoding 
-   of the registers in the instruction
+   of the registers in the instructions of X format
 */
 void src_trgts_reg_translate_for_x_format(char* instr_v[])
 {
@@ -101,12 +101,8 @@ void src_trgts_reg_translate_for_x_format(char* instr_v[])
     }   
 }
 
-
-
-int32_t and(int instr_c, char *instr_v[])
+char* and(int instr_c, char *instr_v[])
 {
-    int32_t instr_hex;
-
     // PO  011111
     bin_enc[0]='0';
     for(i=1;i<=5;i++)
@@ -133,14 +129,11 @@ int32_t and(int instr_c, char *instr_v[])
     src_trgts_reg_translate_for_x_format(instr_v);
 
     bin_enc[32]='\0';    
-    //sscanf(temp,"%d",&instr_hex);
-    return instr_hex;
+    return bin_enc;
 }
 
-int32_t nand(int instr_c, char *instr_v[])
+char* nand(int instr_c, char *instr_v[])
 {
-    int32_t instr_hex;
-    
     // PO 011111
    bin_enc[0]='0';
    for(i=1;i<=5;i++)
@@ -169,14 +162,11 @@ int32_t nand(int instr_c, char *instr_v[])
     src_trgts_reg_translate_for_x_format(instr_v);
 
     bin_enc[32]='\0';    
-    //sscanf(temp,"%d",&instr_hex);
-    return instr_hex;
+    return bin_enc;
 }
 
-int32_t or(int instr_c, char *instr_v[])
+char* or(int instr_c, char *instr_v[])
 {
-    int32_t instr_hex;
-    
     // PO 011111
     bin_enc[0]='0';
     for(i=1;i<=5;i++)
@@ -203,14 +193,11 @@ int32_t or(int instr_c, char *instr_v[])
      src_trgts_reg_translate_for_x_format(instr_v);
 
     bin_enc[32]='\0'; 
-    //sscanf(temp,"%d",&instr_hex);
-    return instr_hex;
+    return bin_enc;
 }
 
-int32_t xor(int instr_c, char *instr_v[])
+char* xor(int instr_c, char *instr_v[])
 {
-    int32_t instr_hex;
-    
     // PO 011111
     bin_enc[0]='0';
     for(i=1;i<=5;i++)
@@ -237,14 +224,11 @@ int32_t xor(int instr_c, char *instr_v[])
     src_trgts_reg_translate_for_x_format(instr_v);
 
     bin_enc[32]='\0'; 
-    //sscanf(temp,"%d",&instr_hex);
-    return instr_hex;
+    return bin_enc;
 }
 
-int32_t extsw(int instr_c, char *instr_v[])
+char* extsw(int instr_c, char *instr_v[])
 {
-    int32_t instr_hex;
-    
     // PO 011111
     bin_enc[0]='0';
     for(i=1;i<=5;i++)
@@ -271,14 +255,11 @@ int32_t extsw(int instr_c, char *instr_v[])
     src_trgts_reg_translate_for_x_format(instr_v);
 
     bin_enc[32]='\0'; 
-    //sscanf(temp,"%d",&instr_hex);
-    return instr_hex;
+    return bin_enc;
 }
 
-int32_t sld(int instr_c, char *instr_v[])
+char* sld(int instr_c, char *instr_v[])
 {
-    int32_t instr_hex;
-    
     // PO 011111
     bin_enc[0]='0';
     for(i=1;i<=5;i++)
@@ -304,14 +285,11 @@ int32_t sld(int instr_c, char *instr_v[])
     src_trgts_reg_translate_for_x_format(instr_v);
 
     bin_enc[32]='\0'; 
-    //sscanf(temp,"%d",&instr_hex);
-    return instr_hex;
+    return bin_enc;
 }
 
-int32_t srd(int instr_c, char *instr_v[])
+char* srd(int instr_c, char *instr_v[])
 {
-    int32_t instr_hex;
-    
     // PO 011111
     bin_enc[0]='0';
     for(i=1;i<=5;i++)
@@ -338,14 +316,11 @@ int32_t srd(int instr_c, char *instr_v[])
     src_trgts_reg_translate_for_x_format(instr_v);
 
     bin_enc[32]='\0'; 
-    //sscanf(temp,"%d",&instr_hex);
-    return instr_hex;
+    return bin_enc;
 }
 
-int32_t srad(int instr_c, char *instr_v[])
+char* srad(int instr_c, char *instr_v[])
 {
-    int32_t instr_hex;
-    
     // PO 011111
     bin_enc[0]='0';
     for(i=1;i<=5;i++)
@@ -373,6 +348,5 @@ int32_t srad(int instr_c, char *instr_v[])
     src_trgts_reg_translate_for_x_format(instr_v);
 
     bin_enc[32]='\0'; 
-    //sscanf(temp,"%d",&instr_hex);
-    return instr_hex;
+    return bin_enc;
 }
