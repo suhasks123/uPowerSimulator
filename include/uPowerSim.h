@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<inttypes.h>
 
 //Structs
 struct cmdline
@@ -47,9 +48,7 @@ struct symbol_table_data
     char *label;
 
     /*
-     * asciiz - Null terminated string
-     * word - stores a set of words in successive words in
-     * memory.
+     * word - stores a word in memory in memory.
      */
     char *type;
 
