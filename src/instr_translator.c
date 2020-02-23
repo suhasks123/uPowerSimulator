@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdint.h>
+#include<string.h>
+#include<math.h>
 
 #include "uPowerSim.h"
 
@@ -150,9 +152,9 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
 {
     int32_t instr_hex;
     char* temp;
-    char* instr[] = "01001101100010100000000000000000";                     //Binary with BD part filled with 0's
-    int addr,i,j,k=0;
-    int bd[14];
+    char* instr[] = "01001100000000000000000000000000";                     //Binary with BD,BI and BO parts filled with 0's
+    int addr,i,j,k=0,l,b=0,a;
+    int bd[14],reg[5];
     struct symbol_table_text* ptr = sym_tab_text_head;
     while (ptr->next!=NULL)
     {
@@ -196,7 +198,7 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
                 instr[k+i] = '1';
         }
     }
-    else                                                        //If Branch Displacement<0, calculate binary using 1;s complement of -b-1;
+    else                                                        //If Branch Displacement<0, calculate binary using 1's complement of -b-1;
     {
         b = b*(-1);
         b-=1;
@@ -208,11 +210,58 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
         for(i=0;i<14;i++)
         {
             if(bd[i] == 0)
-                instr[k+i] = '1';                               //THe complements
+                instr[k+i] = '1';                               //The complements
             else
                 instr[k+i] = '0';
         }
     }
+
+    for(i=1;i<instr_c-1;i++){                                   //Finding the register numbers to be compared.
+        
+        temp = instr_v[i];
+
+        //To extract register number
+        if(temp[2]=='\0')                   
+            l = 1;
+        else 
+            l = 2;
+        b=0;                                                            //Finding register number in decimal
+        for(j=l;j>=1;j--){
+
+            a = instr_v[i][j];
+            int a1 = a-48;
+            b = b + a1*pow(10,l-j);
+
+        //    printf("%d ",l);
+        }
+        //printf("%d ",b);
+  
+        if(b>31)
+        {
+            printf("Invalid register number.\n");                       //Corner Case
+            return -1;
+        }
+        for(j=4;j>=0;j--)
+        {
+            reg[j] = b%2;
+            b/=2;
+        }
+       /* for(j=0;j<5;j++)
+        {
+            printf("%d", reg[j]);
+        }*/
+        k=6;
+
+        for(j=0;j<5;j++)                                                //Making the changes in the binary
+        {
+            if(reg[j]==0)
+                instr[k+j] = '0';
+            else
+                instr[k+j] = '1';
+        }
+        k+=5;
+      //  printf("%s ", instr);
+    }    
 
     return instr;
 }
