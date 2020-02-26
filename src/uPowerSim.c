@@ -190,12 +190,12 @@ void pass_1_data()
 void pass_2()
 {
 	int i;
-	int32_t instr_hex;
+	char *instr_bin;
 	bin_file = fopen("upower.bin", "w");
 	for (i = 0;i < n_instr;i++)
 	{
-		instr_hex = translate_instr(i_lines[i],i);
-		fprintf(bin_file, "%x\n", instr_hex);
+		instr_bin = translate_instr(i_lines[i],i);
+		fprintf(bin_file, "%s\n", instr_bin);
 	}
 }
 
@@ -208,17 +208,18 @@ void pass_2()
 int32_t translate_instr(char *instr, int cia);
 {
 	int i = 0, instr_c = 0;
-	char* instr_hex;
-	char *token;
-	char instr_v[10][100];
+	char *instr_bin;
+	char *instr_v[100];
+	char inst[100];
+    strcpy(inst, instr);
 	
 	//Tokenization
-	token = strtok(instr, ", ");
-	while (token != NULL)
+	instr_v[0] = strtok(inst, ", ");
+	while (instr_v[i] != NULL)
 	{
-		instr_v[i] = token;
+        i++;
 		instr_c++;
-		token = strtok(NULL, ", ");
+		instr_v[i] = strtok(NULL, ", ");
 	}
 
 	//Add new 'if' condition for adding a new instruction 
