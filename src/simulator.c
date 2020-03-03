@@ -1,9 +1,11 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<inttypes.h>
+#include<math.h>
+#include<string.h>
 
-#include "uPowerSim.h"
-#include "simulator.h"
+#include "../include/uPowerSim.h"
+#include "../include/simulator.h"
 
 
 void initialize()

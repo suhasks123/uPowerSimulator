@@ -8,7 +8,7 @@
 
 int i;
 
-char bin_enc[33]; // stores the binary encoding of the instructions
+char bin_enc[35]; // stores the binary encoding of the instructions
 
 char* register_translator(char* t) // 5 bit representations of register numbers
 {
@@ -138,7 +138,10 @@ char* and(int instr_c, char *instr_v[])
     // RS RA RB
     src_trgts_reg_translate_for_x_format(instr_v);
 
-    bin_enc[32]='\0';    
+    bin_enc[32] = ' ';
+    bin_enc[33] = 'X';
+    bin_enc[34] = '\0';
+
     return bin_enc;
 }
 
@@ -173,7 +176,10 @@ char* nand(int instr_c, char *instr_v[])
     // RS RA RB
     src_trgts_reg_translate_for_x_format(instr_v);
 
-    bin_enc[32]='\0';    
+    bin_enc[32] = ' ';
+    bin_enc[33] = 'X';
+    bin_enc[34] = '\0';
+
     return bin_enc;
 }
 
@@ -204,7 +210,10 @@ char* or(int instr_c, char *instr_v[])
     // RS RA RB
      src_trgts_reg_translate_for_x_format(instr_v);
 
-    bin_enc[32]='\0'; 
+    bin_enc[32] = ' ';
+    bin_enc[33] = 'X';
+    bin_enc[34] = '\0';
+
     return bin_enc;
 }
 
@@ -235,7 +244,10 @@ char* xor(int instr_c, char *instr_v[])
     // RS RA RB
     src_trgts_reg_translate_for_x_format(instr_v);
 
-    bin_enc[32]='\0'; 
+    bin_enc[32] = ' ';
+    bin_enc[33] = 'X';
+    bin_enc[34] = '\0';
+
     return bin_enc;
 }
 
@@ -266,7 +278,10 @@ char* extsw(int instr_c, char *instr_v[])
     // RS RA RB
     src_trgts_reg_translate_for_x_format(instr_v);
 
-    bin_enc[32]='\0'; 
+    bin_enc[32] = ' ';
+    bin_enc[33] = 'X';
+    bin_enc[34] = '\0';
+
     return bin_enc;
 }
 
@@ -296,7 +311,10 @@ char* sld(int instr_c, char *instr_v[])
     // RS RA RB
     src_trgts_reg_translate_for_x_format(instr_v);
 
-    bin_enc[32]='\0'; 
+    bin_enc[32] = ' ';
+    bin_enc[33] = 'X';
+    bin_enc[34] = '\0';
+
     return bin_enc;
 }
 
@@ -327,7 +345,10 @@ char* srd(int instr_c, char *instr_v[])
     // RS RA RB
     src_trgts_reg_translate_for_x_format(instr_v);
 
-    bin_enc[32]='\0'; 
+    bin_enc[32] = ' ';
+    bin_enc[33] = 'X';
+    bin_enc[34] = '\0';
+
     return bin_enc;
 }
 
@@ -359,7 +380,10 @@ char* srad(int instr_c, char *instr_v[])
     // RS RA RB
     src_trgts_reg_translate_for_x_format(instr_v);
 
-    bin_enc[32]='\0'; 
+    bin_enc[32] = ' ';
+    bin_enc[33] = 'X';
+    bin_enc[34] = '\0';
+
     return bin_enc;
 }
 
@@ -371,7 +395,7 @@ char* add(int instr_c, char *instr_v[])
     int32_t instr_hex;
     char a;
     int rt,ra,rb,j,l,b=0,k=6;
-    char instr[] = "01111100000000000000001000010100 xo";                   //The binary with registernumbers filled as 0 initially
+    char instr[] = "01111100000000000000001000010100 XO";                   //The binary with registernumbers filled as 0 initially
     int reg[5];                                                         //Temporary storage of register numbers in binary
 
     for(i=1;i<instr_c;i++){
@@ -430,7 +454,7 @@ char* addi(int instr_c, char *instr_v[])
     int32_t instr_hex;
     char a;
     int rt,ra,j,l,b=0,k=6;
-    char instr[] = "00111000000000000000000000000000 d";                  //The binary with register numbers filled as 0 initially
+    char instr[] = "00111000000000000000000000000000 D";                  //The binary with register numbers filled as 0 initially
     int reg[5];                                                         //Temporary storage of register numbers in binary
     int imm[16];                                                        //Temporary storage of immediate value
 
@@ -513,7 +537,7 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
 {
     int32_t instr_hex;
     char* temp;
-    char* instr[] = "01001100000000000000000000000000";                     //Binary with BD,BI and BO parts filled with 0's
+    char* instr[] = "01001100000000000000000000000000 B";                     //Binary with BD,BI and BO parts filled with 0's
     int addr,j,k=0,l,b=0,a;
     int bd[14],reg[5];
     struct symbol_table_text* ptr = sym_tab_text_head;
@@ -635,7 +659,7 @@ char* subf(int instr_c, char *instr_v[])
 {
     char a;
     int rt,ra,rb,i,j,l,b=0,k=6;
-    char instr[] = "01111100000000000000000001010000 xo";                   //The binary with registernumbers filled as 0 initially
+    char instr[] = "01111100000000000000000001010000 XO";                   //The binary with registernumbers filled as 0 initially
     int reg[5];                                                         //Temporary storage of register numbers in binary
 
     for(i=1;i<instr_c;i++){
