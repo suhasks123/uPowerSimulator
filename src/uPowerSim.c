@@ -35,13 +35,16 @@ void read_asm()
 		exit(EXIT_FAILURE);
 	}
 
-	char buffer[100];
+	char *buffer = NULL;
+	size_t size = 0;
 	int i = 0;
 
-	while(fgets(buffer, 100, asm_file))
+	while(getline(&buffer, &size, asm_file) != -1)
 	{
 		//f_lines[i] = (struct line *)malloc(sizeof(struct line));
 		strcpy(f_lines[i]->asm_line, buffer);
+		if(asm_line[i][strlen(asm_line[i])-2]=='\r')
+            asm_line[i][strlen(asm_line[i])-2]='\0';
 		i++;
 	}
 

@@ -15,29 +15,29 @@ void initialize()
     while(CIA != n_instr)
     {
         displacement = 1;
-        if(strcmp(bin_lines[CIA]->type, "X")==0)
+        if(strcmp(bin_lines[CIA].type, "X")==0)
         {
-            instr_typ_x(bin_lines[CIA]->instr);
+            instr_typ_x(bin_lines[CIA].instr);
         }
 
-        if(strcmp(bin_lines[CIA]->type, "XO")==0)
+        if(strcmp(bin_lines[CIA].type, "XO")==0)
         {
-            instr_typ_xo(bin_lines[CIA]->instr);
+            instr_typ_xo(bin_lines[CIA].instr);
         }
 
-        if(strcmp(bin_lines[CIA]->type, "D")==0)
+        if(strcmp(bin_lines[CIA].type, "D")==0)
         {
-            instr_typ_d(bin_lines[CIA]->instr);
+            instr_typ_d(bin_lines[CIA].instr);
         }
 
-        if(strcmp(bin_lines[CIA]->type, "B")==0)
+        if(strcmp(bin_lines[CIA].type, "B")==0)
         {
-            displacement = instr_typ_b(bin_lines[CIA]->instr);
+            displacement = instr_typ_b(bin_lines[CIA].instr);
         }
 
-        if(strcmp(bin_lines[CIA]->type, "DS")==0)
+        if(strcmp(bin_lines[CIA].type, "DS")==0)
         {
-            instr_typ_ds(bin_lines[CIA]->instr);
+            instr_typ_ds(bin_lines[CIA].instr);
         }
 
         CIA += displacement;
@@ -48,8 +48,10 @@ void read_bin()
 {
     int i = 0;
     int j, k;
-    char buffer[100], ins[100], typ[100];
-    while(fgets(buffer, 100, bin_file))
+    char *buffer = NULL;
+    size_t size = 0;
+    char ins[100], typ[100];
+    while(getline(&buffer, &size, bin_file) != -1)
 	{
         j=0;
         while(buffer[j] != ' ')
@@ -61,15 +63,15 @@ void read_bin()
 
         k=0;
         j++;
-        while(buffer[j] != '\0')
+        while(buffer[j] != '\0' && buffer[j] != '\r' && buffer[j] != '\n')
         {
             typ[k] = buffer[j];
             k++;
             j++;
         }
         typ[k] = '\0';
-        strcpy(bin_lines[i]->instr, ins);
-        strcpy(bin_lines[i]->type, typ);
+        strcpy(bin_lines[i].instr, ins);
+        strcpy(bin_lines[i].type, typ);
         i++;
 	}
 }
