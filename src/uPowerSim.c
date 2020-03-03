@@ -52,13 +52,9 @@ void read_asm()
 	while(getline(&buffer, &size, asm_file) != -1)
 	{
 		//f_lines[i] = (struct line *)malloc(sizeof(struct line));
-<<<<<<< HEAD
 		strcpy(f_lines[i]->asm_line, buffer);
 		if(asm_line[i][strlen(asm_line[i])-2]=='\r')
             asm_line[i][strlen(asm_line[i])-2]='\0';
-=======
-		strcpy(f_lines[i].asm_line, buffer);
->>>>>>> 5302cec75415e88e5819ba47294b64851480fb1b
 		i++;
 	}
 
