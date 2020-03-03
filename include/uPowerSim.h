@@ -61,12 +61,9 @@ struct symbol_table_data
     struct symbol_table_data *next;
 };
 
-struct symbol_table_text *sym_tab_text_head;
-struct symbol_table_data *sym_tab_data_head;
+struct symbol_table_text *sym_tab_text_head = NULL;
+struct symbol_table_data *sym_tab_data_head = NULL;
 //struct symbol_table *sym_tab_current;
-sym_table_text_head = NULL;
-sym_table_data_head = NULL;
-//sym_table_current = NULL;
 
 //Global Variables
 FILE *asm_file;
