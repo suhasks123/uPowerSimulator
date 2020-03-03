@@ -4,23 +4,33 @@
 #include<math.h>
 #include<string.h>
 
-#include "uPowerSim.h"
+#include "../include/uPowerSim.h"
 
 int main(int argc, char *argv[])
 {
 	parse_command(argv);
 	read_asm();
+
+    for(int i = 0;i<5;i++){
+        printf("%s\n", f_lines[i].asm_line);
+    }
+
 	pass_1_text();
-	pass_1_data();
-	sym_table_to_files();
-	pass_2();
+    struct symbol_table_text* ptr = (struct symbol_table_text*) malloc(sizeof(struct symbol_table_text));
+    ptr = sym_tab_text_head;
+    while(ptr!=NULL)
+    {
+        printf("Label : %s\n", ptr->label);
+        printf("Relative address : %d\n", ptr->rel_add);
+        ptr = ptr->next;
+    }
 	return 0;
 }
 
 void parse_command(char *argv[])
 {
-	cmd->command = argv[1];
-	cmd->path = argv[2];
+	cmd.command = argv[1];
+	cmd.path = argv[1];
 	// More statements to be added
 	// for options
 	return;
@@ -28,7 +38,7 @@ void parse_command(char *argv[])
 
 void read_asm()
 {
-	asm_file = fopen(cmd->path, "r");
+	asm_file = fopen(cmd.path, "r");
 	if(asm_file == NULL)
 	{
 		perror("Unable to open file");
@@ -41,7 +51,7 @@ void read_asm()
 	while(fgets(buffer, 100, asm_file))
 	{
 		//f_lines[i] = (struct line *)malloc(sizeof(struct line));
-		strcpy(f_lines[i]->asm_line, buffer);
+		strcpy(f_lines[i].asm_line, buffer);
 		i++;
 	}
 
@@ -54,36 +64,37 @@ void pass_1_text()
 	int flag = 0, i;
 	for(i=0;i<n_lines;i++)
 	{
-		if(strcmp(f_lines[i]->asm_line, ".text") == 0)
+		if(strcmp(f_lines[i].asm_line, ".text")==0)
 		{
+            printf("Lmao");
 			flag = 1;
-			f_lines[i]->type = 'D';
+			f_lines[i].type = 'D';
 			continue;
 		}
 
-		if((f_lines[i]->asm_line[0] == '.') &&
-	        (strcmp(f_lines[i]->asm_line, ".text") != 0))
+		if((f_lines[i].asm_line[0] == '.') && (strcmp(f_lines[i].asm_line, ".text") != 0))
 		{
 			flag = 0;
-			f_lines[i]->type = 'D';
+			f_lines[i].type = 'D';
 			continue;
 		}
 
 		// If the line is under .text and is not blank or newline
-		if(flag == 1 && f_lines[i]->asm_line[0] != '\0' &&
-	        f_lines[i]->asm_line[0] != '\n')
+		if(flag == 1 && (f_lines[i].asm_line[0] != '\0' || f_lines[i].asm_line[0] != '\n'))
 		{
+            printf("Lmao");
 			// Check for label
-			if(f_lines[i]->asm_line[strlen(f_lines[i]->asm_line)-1]==':')
+			if(f_lines[i].asm_line[strlen(f_lines[i].asm_line)-1]==':')
 			{
-				f_lines[i]->type = 'L';
+				f_lines[i].type = 'L';
 				struct symbol_table_text *s_temp;
 				s_temp = (struct symbol_table_text *)malloc(sizeof(struct symbol_table_text));
 				
 				// Create a string with the label name without ':'
-				char lname[sizeof(f_lines[i]->asm_line)];
-				strcpy(lname, f_lines[i]->asm_line);
+				char lname[strlen(f_lines[i].asm_line)];
+				strcpy(lname, f_lines[i].asm_line);
 				lname[strlen(lname)-1] = '\0';
+                printf("%s\n", lname);
 				
 				// Add data to the symbol table entry and connect it to the table
 				s_temp->label = lname;
@@ -94,12 +105,12 @@ void pass_1_text()
 			}
 
 			// Ignore Comments
-			if(f_lines[i]->asm_line[0] == '#')
+			if(f_lines[i].asm_line[0] == '#')
 			{
-				f_lines[i]->type = 'C';
+				f_lines[i].type = 'C';
 				continue;
 			}
-			i_lines[n_instr]->asm_line = f_lines[i]->asm_line;
+			i_lines[n_instr].asm_line = f_lines[i].asm_line;
 			// n_instr is the number of instructions actually written to the binary
 			n_instr++;
 		}
@@ -127,35 +138,35 @@ void pass_1_data()
 	char *data_type, *data;
 	for(i=0;i<n_lines;i++)
 	{
-		if(strcmp(f_lines[i]->asm_line, ".data") == 0)
+		if(strcmp(f_lines[i].asm_line, ".data") == 0)
 		{
 			flag = 1;
-			f_lines[i]->type = 'D';
+			f_lines[i].type = 'D';
 			continue;
 		}
 
-		if((f_lines[i]->asm_line[0] == '.') &&
-	        (strcmp(f_lines[i]->asm_line, ".data") != 0))
+		if((f_lines[i].asm_line[0] == '.') &&
+	        (strcmp(f_lines[i].asm_line, ".data") != 0))
 		{
 			flag = 0;
-			f_lines[i]->type = 'D';
+			f_lines[i].type = 'D';
 			continue;
 		}
 
 		// If the line is under .data and is not blank or newline
-		if(flag == 1 && f_lines[i]->asm_line[0] != '\0' &&
-	        f_lines[i]->asm_line[0] != '\n')
+		if(flag == 1 && f_lines[i].asm_line[0] != '\0' &&
+	        f_lines[i].asm_line[0] != '\n')
 		{
 			// Check for label
-			if(f_lines[i]->asm_line[strlen(f_lines[i]->asm_line)-1] == ':')
+			if(f_lines[i].asm_line[strlen(f_lines[i].asm_line)-1] == ':')
 			{
-				f_lines[i]->type = 'L';
+				f_lines[i].type = 'L';
 				struct symbol_table_data *s_temp;
 				s_temp = (struct symbol_table_data *)malloc(sizeof(struct symbol_table_data));
 				
 				// Create a string with the label name without ':'
-				char lname[sizeof(f_lines[i]->asm_line)];
-				strcpy(lname, f_lines[i]->asm_line);
+				char lname[sizeof(f_lines[i].asm_line)];
+				strcpy(lname, f_lines[i].asm_line);
 				lname[strlen(lname)-1] = '\0';
 
 				// Move on to the next line
@@ -177,9 +188,9 @@ void pass_1_data()
 			}
 
 			// Ignore Comments
-			if(f_lines[i]->asm_line[0] == '#')
+			if(f_lines[i].asm_line[0] == '#')
 			{
-				f_lines[i]->type = 'C';
+				f_lines[i].type = 'C';
 				continue;
 			}
 		}
@@ -245,6 +256,9 @@ int32_t translate_instr(char *instr, int cia);
 		instr_hex = sld(instr_c, instr_v);	
 	if (strcmp(instr_v[0], "extsw") == 0)
 		instr_hex = extsw(instr_c, instr_v);	
+	if (strcmp(instr_v[0], "subf") == 0)
+		instr_hex = subf(instr_c, instr_v);	
+
 	return instr_hex;
 
 	

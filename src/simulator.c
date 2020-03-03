@@ -1,9 +1,11 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<inttypes.h>
+#include<math.h>
+#include<string.h>
 
-#include "uPowerSim.h"
-#include "simulator.h"
+#include "../include/uPowerSim.h"
+#include "../include/simulator.h"
 
 
 void initialize()
@@ -296,7 +298,7 @@ int instr_typ_b(char *bin_instr)
     }
 }
 
-void instr_typ_d(char *bin_instr)
+void instr_typ_ds(char *bin_instr)
 {
     char sRT[6], sRA[6], sDS[15], sXO[3];
     int RT, RA, DS, PO;
