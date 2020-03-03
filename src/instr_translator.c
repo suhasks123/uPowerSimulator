@@ -4,7 +4,7 @@
 #include<string.h>
 #include<math.h>
 
-#include "uPowerSim.h"
+#include "../include/uPowerSim.h"
 
 int i;
 
@@ -144,7 +144,9 @@ char* and(int instr_c, char *instr_v[])
 
 char* nand(int instr_c, char *instr_v[])
 {
-    // PO 011111
+    // PO 011111 sym_tab_text_head = NULL; sym_tab_text_head = NULL;
+
+
    bin_enc[0]='0';
    for(i=1;i<=5;i++)
    {
@@ -369,7 +371,7 @@ char* add(int instr_c, char *instr_v[])
     int32_t instr_hex;
     char a;
     int rt,ra,rb,j,l,b=0,k=6;
-    char instr[] = "0111110000000000000001000010100";                   //The binary with registernumbers filled as 0 initially
+    char instr[] = "01111100000000000000001000010100 xo";                   //The binary with registernumbers filled as 0 initially
     int reg[5];                                                         //Temporary storage of register numbers in binary
 
     for(i=1;i<instr_c;i++){
@@ -417,7 +419,10 @@ char* add(int instr_c, char *instr_v[])
       //  printf("%s ", instr);
     }    
 
-    return instr;
+    char* bin_final = (char*) malloc(sizeof(instr));
+    bin_final = strcpy(bin_final, instr);
+
+    return bin_final;
 }
 
 char* addi(int instr_c, char *instr_v[])
@@ -425,7 +430,7 @@ char* addi(int instr_c, char *instr_v[])
     int32_t instr_hex;
     char a;
     int rt,ra,j,l,b=0,k=6;
-    char instr[] = "00111000000000000000000000000000";                  //The binary with register numbers filled as 0 initially
+    char instr[] = "00111000000000000000000000000000 d";                  //The binary with register numbers filled as 0 initially
     int reg[5];                                                         //Temporary storage of register numbers in binary
     int imm[16];                                                        //Temporary storage of immediate value
 
@@ -496,9 +501,12 @@ char* addi(int instr_c, char *instr_v[])
         else
             instr[k+j] = '1';
     }
-    //printf("%s", instr);    
+    //printf("%s", instr);  
 
-    return instr;
+    char* bin_final = (char*) malloc(sizeof(instr);
+    bin_final = strcpy(bin_final, instr);  
+
+    return bin_final;
 }
 
 char* beq(int instr_c, char *instr_v[], int curr_addr)
@@ -568,7 +576,8 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
                 instr[k+i] = '0';
         }
     }
-
+    char* bin_final = (char*) malloc(sizeof(instr);
+    bin_final = strcpy(bin_final, instr);
     for(i=1;i<instr_c-1;i++){                                   //Finding the register numbers to be compared.
         
         temp = instr_v[i];
@@ -616,6 +625,66 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
       //  printf("%s ", instr);
     }    
 
-    return instr;
+    char* bin_final = (char*) malloc(sizeof(instr)*sizeof(char));
+    bin_final = strcpy(bin_final, instr);
+
+    return bin_final;
 }
 
+char* subf(int instr_c, char *instr_v[])
+{
+    char a;
+    int rt,ra,rb,i,j,l,b=0,k=6;
+    char instr[] = "01111100000000000000000001010000 xo";                   //The binary with registernumbers filled as 0 initially
+    int reg[5];                                                         //Temporary storage of register numbers in binary
+
+    for(i=1;i<instr_c;i++){
+
+        char* temp = instr_v[i];
+
+        //To extract register number
+        if(temp[2]=='\0')                   
+            l = 1;
+        else 
+            l = 2;
+        b=0;                                                            //Finding register number in decimal
+        for(j=l;j>=1;j--){
+
+            a = instr_v[i][j];
+            int a1 = a-48;
+            b = b + a1*pow(10,l-j);
+
+        //    printf("%d ",l);
+        }
+        //printf("%d ",b);
+        if(b>31)
+        {
+            printf("Invalid register number.\n");                       //Corner Case
+            return "\0";
+        }
+        for(j=4;j>=0;j--)
+        {
+            reg[j] = b%2;
+            b/=2;
+        }
+       /* for(j=0;j<5;j++)
+        {
+            printf("%d", reg[j]);
+        }*/
+
+        for(j=0;j<5;j++)                                                //Making the changes in the binary
+        {
+            if(reg[j]==0)
+                instr[k+j] = '0';
+            else
+                instr[k+j] = '1';
+        }
+        k+=5;
+      //  printf("%s ", instr);
+    }    
+
+    char* bin_final = (char*) malloc(sizeof(instr));
+    bin_final = strcpy(bin_final, instr);
+
+    return bin_final;
+}
