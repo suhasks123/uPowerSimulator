@@ -298,7 +298,7 @@ int instr_typ_b(char *bin_instr)
     }
 }
 
-void instr_typ_d(char *bin_instr)
+void instr_typ_ds(char *bin_instr)
 {
     char sRT[6], sRA[6], sDS[15], sXO[3];
     int RT, RA, DS, PO;
