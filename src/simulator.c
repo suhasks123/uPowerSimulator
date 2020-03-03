@@ -78,6 +78,20 @@ void read_bin()
 	}
 }
 
+int bin_to_int(char* bin)
+{
+    int l = strlen(bin);
+    int i, j, b = 0;
+    char a;
+    for(i = l-1; i>=0; i--)
+    {
+        a = bin[i];
+        int a1 = a-48;
+        b = b + a1*pow(2,l-i-1);
+    }
+    return b;
+}
+
 void instr_typ_x(char *bin_instr)
 {
     char sRS[6], sRA[6], sRB[6], sRc[2];
@@ -375,7 +389,7 @@ void instr_typ_ds(char *bin_instr)
         {
             if(ctr == target_address - 1)
             {
-                struct symbol_table_data *s_temp1, *s_temp1;
+                struct symbol_table_data *s_temp1, *s_temp2;
 				s_temp1 = (struct symbol_table_data *)malloc(sizeof(struct symbol_table_data));
                 s_temp2 = (struct symbol_table_data *)malloc(sizeof(struct symbol_table_data));
                 s_temp1->label = NULL;
