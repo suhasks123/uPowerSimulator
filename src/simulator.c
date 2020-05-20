@@ -97,6 +97,7 @@ void instr_typ_x(char *bin_instr)
     char sRS[6], sRA[6], sRB[6], sRc[2];
     int RS, RA, RB, Rc, PO, XO;
     char sPO[7], sXO[11];
+    int i;
     for(i=0;i<32;i++)
     {
         if(i<6)
@@ -164,8 +165,9 @@ void instr_typ_x(char *bin_instr)
 void instr_typ_xo(char *bin_instr)
 {
     char sRT[6], sRA[6], sRB[6], sRc[2], sOE[2];
-    int RS, RA, RB, Rc, PO, XO, OE;
+    int RS, RA, RB, Rc, PO, XO, OE, RT;
     char sPO[7], sXO[10];
+    int i;
     for(i=0;i<32;i++)
     {
         if(i<6)
@@ -203,7 +205,7 @@ void instr_typ_xo(char *bin_instr)
     }
 
     PO = bin_to_int(sPO);
-    RT = bin_to_int(sRS);
+    RT = bin_to_int(sRT);
     RA = bin_to_int(sRA);
     RB = bin_to_int(sRB);
     OE = bin_to_int(sOE);
@@ -211,13 +213,13 @@ void instr_typ_xo(char *bin_instr)
     Rc = bin_to_int(sRc);
 
     // Add
-    if(PO == 31 && OE == 0 && Rc == 0 XO == 266)
+    if(PO == 31 && OE == 0 && Rc == 0 && XO == 266)
     {
         R[RT] = R[RA] + R[RB];
     }
 
     // Subtract
-    if(PO == 31 && OE == 0 && Rc == 0 XO == 40)
+    if(PO == 31 && OE == 0 && Rc == 0 && XO == 40)
     {
         R[RT] = R[RB] - R[RA];
     }
@@ -228,6 +230,7 @@ void instr_typ_d(char *bin_instr)
     char sRT[6], sRA[6], sSI[17];
     int RT, RA, SI, PO;
     char sPO[7];
+    int i;
     for(i=0;i<32;i++)
     {
         if(i<6)
@@ -267,6 +270,7 @@ int instr_typ_b(char *bin_instr)
 {
     char sPO[7], sBO[6], sBI[6], sBD[15], sAA[2], sLK[2];
     int PO, BO, BI, BD, AA, LK;
+    int i;
     for(i=0;i<32;i++)
     {
         if(i<6)
@@ -317,8 +321,9 @@ int instr_typ_b(char *bin_instr)
 void instr_typ_ds(char *bin_instr)
 {
     char sRT[6], sRA[6], sDS[15], sXO[3];
-    int RT, RA, DS, PO;
+    int RT, RA, DS, PO, XO;
     char sPO[7];
+    int i;
     for(i=0;i<32;i++)
     {
         if(i<6)
@@ -397,8 +402,8 @@ void instr_typ_ds(char *bin_instr)
                 s_temp2->label = NULL;
                 s_temp2->type = NULL;
                 int32_t high, low;
-                high = (int32_t)((R[RS] & 0xFFFFFFFF00000000LL) >> 32);
-                low = (int32_t)(R[RS] & 0xFFFFFFFFLL);
+                high = (int32_t)((R[RT] & 0xFFFFFFFF00000000LL) >> 32);
+                low = (int32_t)(R[RT] & 0xFFFFFFFFLL);
                 sprintf(highstr, "%"PRId32"", high);
                 sprintf(lowstr, "%"PRId32"", low);
                 s_temp1->data = highstr;

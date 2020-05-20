@@ -2,6 +2,8 @@
 #include<stdlib.h>
 #include<inttypes.h>
 
+#ifndef SIMULATOR_H
+#define SIMULATOR_H
 // Registers
 int64_t R[32];
 int64_t LR, CIA, NIA, SRR0;
@@ -25,3 +27,5 @@ void instr_typ_ds(char *bin_instr);
 void instr_typ_d(char *bin_instr);
 int instr_typ_b(char *bin_instr);
 void instr_typ_xo(char *bin_instr);
+
+#endif

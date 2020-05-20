@@ -5,6 +5,7 @@
 #include<string.h>
 
 #include "../include/uPowerSim.h"
+#include "../include/simulator.h"
 
 int main(int argc, char *argv[])
 {
@@ -52,9 +53,9 @@ void read_asm()
 	while(getline(&buffer, &size, asm_file) != -1)
 	{
 		//f_lines[i] = (struct line *)malloc(sizeof(struct line));
-		strcpy(f_lines[i]->asm_line, buffer);
-		if(asm_line[i][strlen(asm_line[i])-2]=='\r')
-            asm_line[i][strlen(asm_line[i])-2]='\0';
+		strcpy(f_lines[i].asm_line, buffer);
+		if(f_lines[i].asm_line[strlen(f_lines[i].asm_line)-2]=='\r')
+            f_lines[i].asm_line[strlen(f_lines[i].asm_line)-2]='\0';
 		i++;
 	}
 
@@ -176,7 +177,7 @@ void pass_1_data()
 				i++;
 
 				//Tokenization
-				token = strtok(f_lines[i], " ");
+				token = strtok(f_lines[i].asm_line, " ");
 				data_type = token;
 				token = strtok(NULL, " ");
 				data = token;
@@ -208,7 +209,7 @@ void pass_2()
 	bin_file = fopen("upower.bin", "w");
 	for (i = 0;i < n_instr;i++)
 	{
-		instr_bin = translate_instr(i_lines[i],i);
+		instr_bin = translate_instr(i_lines[i].asm_line,i);
 		fprintf(bin_file, "%s\n", instr_bin);
 	}
 }
@@ -219,12 +220,13 @@ void pass_2()
  * Then the specialized functions in instr_translator.c are
  * called depending on the instruction.
  */
-int32_t translate_instr(char *instr, int cia);
+char *translate_instr(char *instr, int cia)
 {
 	int i = 0, instr_c = 0;
 	char *instr_bin;
 	char *instr_v[100];
 	char inst[100];
+	char *instr_hex;
     strcpy(inst, instr);
 	
 	//Tokenization
@@ -307,7 +309,7 @@ void sym_table_to_files()
 	struct symbol_table_text *s_temp_text;
 	s_temp_text = sym_tab_text_head;
 	text_sym  = fopen("text.sym", "w");
-	while (s_temp != NULL)
+	while (s_temp_text != NULL)
 	{
 		fprintf(text_sym, "%s#%d", s_temp_text->label, s_temp_text->rel_add);
 		s_temp_text = s_temp_text->next;
@@ -316,7 +318,7 @@ void sym_table_to_files()
 	struct symbol_table_data *s_temp_data;
 	s_temp_data = sym_tab_data_head;
 	data_sym  = fopen("data.sym", "w");
-	while (s_temp != NULL)
+	while (s_temp_data != NULL)
 	{
 		fprintf(data_sym, "%s#%s#%s", s_temp_data->label, s_temp_data->type, s_temp_data->data);
 		s_temp_data = s_temp_data->next;

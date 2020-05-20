@@ -5,6 +5,7 @@
 #include<math.h>
 
 #include "../include/uPowerSim.h"
+#include "../include/simulator.h"
 
 int i;
 
@@ -75,14 +76,14 @@ char* register_translator(char* t) // 5 bit representations of register numbers
     else if(strcmp(t,"R31")==0)
         return "11111";
 
-        char* temp = instr_v[i];
+        /*char* temp = instr_v[i];
 
         //To extract register number
         if(temp[2]=='\0')                   
             l = 1;
         else 
             l = 2;
-        b=0;                         
+        b=0;*/                         
 }
 
 /* utility function for binary encoding 
@@ -527,7 +528,7 @@ char* addi(int instr_c, char *instr_v[])
     }
     //printf("%s", instr);  
 
-    char* bin_final = (char*) malloc(sizeof(instr);
+    char* bin_final = (char*) malloc(sizeof(instr));
     bin_final = strcpy(bin_final, instr);  
 
     return bin_final;
@@ -537,7 +538,7 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
 {
     int32_t instr_hex;
     char* temp;
-    char* instr[] = "01001100000000000000000000000000 B";                     //Binary with BD,BI and BO parts filled with 0's
+    char instr[] = "01001100000000000000000000000000 B";                     //Binary with BD,BI and BO parts filled with 0's
     int addr,j,k=0,l,b=0,a;
     int bd[14],reg[5];
     struct symbol_table_text* ptr = sym_tab_text_head;
@@ -546,7 +547,7 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
         temp = ptr->label;
         if(strcmp(temp, instr_v[3])==0)                         //Finding address of label to jump to
         {
-            addr = temp->rel_add;
+            addr = ptr->rel_add;
             break;
         }
         else
@@ -558,7 +559,7 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
     {
         temp = ptr->label;
         if(strcmp(temp, instr_v[3])==0){
-            addr = temp->rel_add;
+            addr = ptr->rel_add;
         }
         else
         {
@@ -566,7 +567,7 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
             return '\0';
         }
     }
-    int b = curr_addr - addr;                                   //The branch displacement
+    b = curr_addr - addr;                                   //The branch displacement
     k = 16;
     if(b>=0)                                                    //Branch displacement as a 14-bit binary
     {
@@ -600,8 +601,8 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
                 instr[k+i] = '0';
         }
     }
-    char* bin_final = (char*) malloc(sizeof(instr);
-    bin_final = strcpy(bin_final, instr);
+    //char* bin_final = (char*) malloc(sizeof(instr));
+    //bin_final = strcpy(bin_final, instr);
     for(i=1;i<instr_c-1;i++){                                   //Finding the register numbers to be compared.
         
         temp = instr_v[i];
@@ -625,7 +626,7 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
         if(b>31)
         {
             printf("Invalid register number.\n");                       //Corner Case
-            return -1;
+            return NULL;
         }
         for(j=4;j>=0;j--)
         {

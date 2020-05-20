@@ -2,6 +2,8 @@
 #include<stdlib.h>
 #include<inttypes.h>
 
+#ifndef UPOWERSIM_H
+#define UPOWERSIM_H
 //Structs
 struct cmdline
 {
@@ -61,8 +63,8 @@ struct symbol_table_data
     struct symbol_table_data *next;
 };
 
-struct symbol_table_text *sym_tab_text_head = NULL;
-struct symbol_table_data *sym_tab_data_head = NULL;
+static struct symbol_table_text *sym_tab_text_head = NULL;
+static struct symbol_table_data *sym_tab_data_head = NULL;
 //struct symbol_table *sym_tab_current;
 
 //Global Variables
@@ -85,3 +87,22 @@ void pass_2(void);
 int parse_line(char *);
 int translate_instruction(char *args[]);
 char check_instruction_type(char *inst);
+
+
+char* register_translator(char* t);
+void src_trgts_reg_translate_for_x_format(char* instr_v[]);
+char* and(int instr_c, char *instr_v[]);
+char* nand(int instr_c, char *instr_v[]);
+char* or(int instr_c, char *instr_v[]);
+char* xor(int instr_c, char *instr_v[]);
+char* extsw(int instr_c, char *instr_v[]);
+char* sld(int instr_c, char *instr_v[]);
+char* srd(int instr_c, char *instr_v[]);
+char* srad(int instr_c, char *instr_v[]);
+char* add(int instr_c, char *instr_v[]);
+char* addi(int instr_c, char *instr_v[]);
+char* beq(int instr_c, char *instr_v[], int curr_addr);
+char* subf(int instr_c, char *instr_v[]);
+char *translate_instr(char *instr, int cia);
+
+#endif

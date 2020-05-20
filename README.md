@@ -5,7 +5,29 @@ uPowerSimulator is the Instruction Set Simulator for the new **uPower** ISA, a s
 ## Preliminaries:
 - The project is written entirely in C.
 - There are mainly two components: The Assembler and the Simulator.
-- The code uses the Linux kernel coding style (https://www.kernel.org/doc/html/v4.10/process/coding-style.html).
+
+## Dependencies:
+
+These are for the build system:
+1. Autoconf (>= 2.69).
+2. Automake (>= 1.15).
+
+## Build Instructions:
+
+1. Clone the repository and execute these instructions in the root directory of the repo:
+    ```bash
+    $ autoreconf -i
+    $ mkdir build
+    $ cd build
+    $ ../configure
+    $ make
+    ```
+    This would build the application with a binary inside the `bin/` directory.
+
+2. To install this on your computer globally:
+    ```
+    $ sudo make install
+    ```
 
 ## Adding New Instructions:
 
