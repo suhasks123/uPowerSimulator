@@ -12,12 +12,8 @@ int main(int argc, char *argv[])
 	parse_command(argv);
 	read_asm();
 
-    for(int i = 0;i<5;i++){
-        printf("%s\n", f_lines[i].asm_line);
-    }
-
 	pass_1_text();
-    struct symbol_table_text* ptr = (struct symbol_table_text*) malloc(sizeof(struct symbol_table_text));
+	struct symbol_table_text* ptr;
     ptr = sym_tab_text_head;
     while(ptr!=NULL)
     {
@@ -25,6 +21,7 @@ int main(int argc, char *argv[])
         printf("Relative address : %d\n", ptr->rel_add);
         ptr = ptr->next;
     }
+	pass_2();
 	return 0;
 }
 
@@ -68,15 +65,15 @@ void pass_1_text()
 	int flag = 0, i;
 	for(i=0;i<n_lines;i++)
 	{
-		if(strcmp(f_lines[i].asm_line, ".text")==0)
+		if(strcmp(f_lines[i].asm_line, ".text\n")==0)
 		{
-            printf("Lmao");
+            printf("Lmao\n");
 			flag = 1;
 			f_lines[i].type = 'D';
 			continue;
 		}
 
-		if((f_lines[i].asm_line[0] == '.') && (strcmp(f_lines[i].asm_line, ".text") != 0))
+		if((f_lines[i].asm_line[0] == '.') && (strcmp(f_lines[i].asm_line, ".text\n") != 0))
 		{
 			flag = 0;
 			f_lines[i].type = 'D';
@@ -84,11 +81,11 @@ void pass_1_text()
 		}
 
 		// If the line is under .text and is not blank or newline
-		if(flag == 1 && (f_lines[i].asm_line[0] != '\0' || f_lines[i].asm_line[0] != '\n'))
+		if(flag == 1 && f_lines[i].asm_line[0] != '\n')
 		{
-            printf("Lmao");
+            printf("Lmao\n");
 			// Check for label
-			if(f_lines[i].asm_line[strlen(f_lines[i].asm_line)-1]==':')
+			if(f_lines[i].asm_line[strlen(f_lines[i].asm_line)-2]==':')
 			{
 				f_lines[i].type = 'L';
 				struct symbol_table_text *s_temp;
@@ -97,11 +94,12 @@ void pass_1_text()
 				// Create a string with the label name without ':'
 				char lname[strlen(f_lines[i].asm_line)];
 				strcpy(lname, f_lines[i].asm_line);
-				lname[strlen(lname)-1] = '\0';
-                printf("%s\n", lname);
-				
+				lname[strlen(lname)-2] = '\0';
+				char *temp = (char *)malloc(strlen(lname)*sizeof(char));
+                //printf("%s\n", lname);
+				strcpy(temp, lname);
 				// Add data to the symbol table entry and connect it to the table
-				s_temp->label = lname;
+				s_temp->label = temp;
 				s_temp->rel_add = n_instr;
 				s_temp->next = sym_tab_text_head;
 				sym_tab_text_head = s_temp;
@@ -206,12 +204,21 @@ void pass_2()
 {
 	int i;
 	char *instr_bin;
-	bin_file = fopen("upower.bin", "w");
+	FILE *f;
+	f = fopen("upower.bin", "w");
+	if (f == NULL) 
+    { 
+        printf("Could not open file");
+    }
+	//printf("Pass2: %d\n", n_instr);
 	for (i = 0;i < n_instr;i++)
 	{
+		//printf("%s\n", i_lines[i].asm_line);
 		instr_bin = translate_instr(i_lines[i].asm_line,i);
-		fprintf(bin_file, "%s\n", instr_bin);
+		printf("%s\n", instr_bin);
+		fprintf(f, "%s\n", instr_bin);
 	}
+	fclose(f);
 }
 
 /*
