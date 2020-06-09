@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
         p = p->next;
     }
 
-	printf("In read bin");
+	//printf("In read bin");
 	pass_2();
 	initialize();
 	printf("Registers after execution:\n");
@@ -225,9 +225,9 @@ void pass_2()
 	//printf("Pass2: %d\n", n_instr);
 	for (i = 0;i < n_instr;i++)
 	{
-		printf("%s\n", i_lines[i].asm_line);
+		//printf("%s\n", i_lines[i].asm_line);
 		instr_bin = translate_instr(i_lines[i].asm_line,i);
-		printf("%s\n", instr_bin);
+		//printf("%s\n", instr_bin);
 		fprintf(bin_file, "%s\n", instr_bin);
 	}
 	fclose(bin_file);
@@ -249,39 +249,35 @@ char *translate_instr(char *instr, int cia)
     strcpy(inst, instr);
 	
 	//Tokenization
-	instr_v[0] = strtok(inst, ", ");
+	instr_v[0] = strtok(inst, ", ()");
 	while (instr_v[i] != NULL)
 	{
         i++;
 		instr_c++;
-		instr_v[i] = strtok(NULL, ", ");
+		instr_v[i] = strtok(NULL, ", ()");
 	}
 
 	//Add new 'if' condition for adding a new instruction 
 	if (strcmp(instr_v[0], "add") == 0)
 		instr_hex = add(instr_c, instr_v);
 	if (strcmp(instr_v[0], "addi") == 0)
-		instr_hex = addi(instr_c, instr_v);	
+		instr_hex = addi(instr_c, instr_v);
 	if (strcmp(instr_v[0], "beq") == 0)
 		instr_hex = beq(instr_c, instr_v, cia, sym_tab_text_head);
 	if (strcmp(instr_v[0], "and") == 0)
-		instr_hex = and(instr_c, instr_v);	
+		instr_hex = and(instr_c, instr_v);
 	if (strcmp(instr_v[0], "or") == 0)
-		instr_hex = or(instr_c, instr_v);	
+		instr_hex = or(instr_c, instr_v);
 	if (strcmp(instr_v[0], "xor") == 0)
-		instr_hex = xor(instr_c, instr_v);	
+		instr_hex = xor(instr_c, instr_v);
 	if (strcmp(instr_v[0], "nand") == 0)
-		instr_hex = nand(instr_c, instr_v);	
-	if (strcmp(instr_v[0], "srd") == 0)
-		instr_hex = srd(instr_c, instr_v);	
-	if (strcmp(instr_v[0], "srad") == 0)
-		instr_hex = srad(instr_c, instr_v);	
-	if (strcmp(instr_v[0], "sld") == 0)
-		instr_hex = sld(instr_c, instr_v);	
-	if (strcmp(instr_v[0], "extsw") == 0)
-		instr_hex = extsw(instr_c, instr_v);	
+		instr_hex = nand(instr_c, instr_v);
 	if (strcmp(instr_v[0], "subf") == 0)
-		instr_hex = subf(instr_c, instr_v);	
+		instr_hex = subf(instr_c, instr_v);
+	if (strcmp(instr_v[0], "ld") == 0)
+		instr_hex = ld(instr_c, instr_v);
+	if (strcmp(instr_v[0], "std") == 0)
+		instr_hex = std(instr_c, instr_v);
 
 	return instr_hex;
 

@@ -9,72 +9,75 @@
 
 int i;
 
-char bin_enc[35]; // stores the binary encoding of the instructions
+//char bin_enc[35]; // stores the binary encoding of the instructions
 
 char* register_translator(char* t) // 5 bit representations of register numbers
 {
-    if(strcmp(t,"R1")==0)
+    if(strcmp(t,"R1")==0 || strcmp(t,"R1\n")==0)
         return "00001";
-    else if(strcmp(t,"R2")==0)
+    else if(strcmp(t,"R2")==0 || strcmp(t,"R2\n")==0)
         return "00010";
-    else if(strcmp(t,"R3")==0)
+    else if(strcmp(t,"R3")==0 || strcmp(t,"R3\n")==0)
         return "00011";
-    else if(strcmp(t,"R4")==0)
+    else if(strcmp(t,"R4")==0 || strcmp(t,"R4\n")==0)
         return "00100";
-    else if(strcmp(t,"R5")==0)
+    else if(strcmp(t,"R5")==0 || strcmp(t,"R5\n")==0)
         return "00101";
-    else if(strcmp(t,"R6")==0)
+    else if(strcmp(t,"R6")==0 || strcmp(t,"R6\n")==0)
         return "00110";
-    else if(strcmp(t,"R7")==0)
+    else if(strcmp(t,"R7")==0 || strcmp(t,"R7\n")==0)
         return "00111";
-    else if(strcmp(t,"R8")==0)
+    else if(strcmp(t,"R8")==0 || strcmp(t,"R8\n")==0)
         return "01000";
-    else if(strcmp(t,"R9")==0)
+    else if(strcmp(t,"R9")==0 || strcmp(t,"R9\n")==0)
         return "01001";
-    else if(strcmp(t,"R10")==0)
+    else if(strcmp(t,"R10")==0 || strcmp(t,"R10\n")==0)
         return "01010";
-    else if(strcmp(t,"R11")==0)
+    else if(strcmp(t,"R11")==0 || strcmp(t,"R11\n")==0)
         return "01011";
-    else if(strcmp(t,"R12")==0)
+    else if(strcmp(t,"R12")==0 || strcmp(t,"R12\n")==0)
         return "01100";
-    else if(strcmp(t,"R13")==0)
-        return "01101";            
-    else if(strcmp(t,"R14")==0)
+    else if(strcmp(t,"R13")==0 || strcmp(t,"R13\n")==0)
+        return "01101";
+    else if(strcmp(t,"R14")==0 || strcmp(t,"R14\n")==0)
         return "01110";
-    else if(strcmp(t,"R15")==0)
+    else if(strcmp(t,"R15")==0 || strcmp(t,"R15\n")==0)
         return "01111";
-    else if(strcmp(t,"R16")==0)
+    else if(strcmp(t,"R16")==0 || strcmp(t,"R16\n")==0)
         return "10000";
-    else if(strcmp(t,"R17")==0)
+    else if(strcmp(t,"R17")==0 || strcmp(t,"R17\n")==0)
         return "10001";
-    else if(strcmp(t,"R18")==0)
+    else if(strcmp(t,"R18")==0 || strcmp(t,"R18\n")==0)
         return "10010";
-    else if(strcmp(t,"R19")==0)
+    else if(strcmp(t,"R19")==0 || strcmp(t,"R19\n")==0)
         return "10011";
-    else if(strcmp(t,"R20")==0)
+    else if(strcmp(t,"R20")==0 || strcmp(t,"R20\n")==0)
         return "10100";
-    else if(strcmp(t,"R21")==0)
+    else if(strcmp(t,"R21")==0 || strcmp(t,"R21\n")==0)
         return "10101";
-    else if(strcmp(t,"R22")==0)
+    else if(strcmp(t,"R22")==0 || strcmp(t,"R22\n")==0)
         return "10110";
-    else if(strcmp(t,"R23")==0)
+    else if(strcmp(t,"R23")==0 || strcmp(t,"R23\n")==0)
         return "10111";
-    else if(strcmp(t,"R24")==0)
+    else if(strcmp(t,"R24")==0 || strcmp(t,"R24\n")==0)
         return "11000";
-    else if(strcmp(t,"R25")==0)
+    else if(strcmp(t,"R25")==0 || strcmp(t,"R25\n")==0)
         return "11001";
-    else if(strcmp(t,"R26")==0)
+    else if(strcmp(t,"R26")==0 || strcmp(t,"R26\n")==0)
         return "11010";
-    else if(strcmp(t,"R27")==0)
+    else if(strcmp(t,"R27")==0 || strcmp(t,"R27\n")==0)
         return "11011";
-    else if(strcmp(t,"R28")==0)
+    else if(strcmp(t,"R28")==0 || strcmp(t,"R28\n")==0)
         return "11100";
-    else if(strcmp(t,"R29")==0)
+    else if(strcmp(t,"R29")==0 || strcmp(t,"R29\n")==0)
         return "11101";
-    else if(strcmp(t,"R30")==0)
+    else if(strcmp(t,"R30")==0 || strcmp(t,"R30\n")==0)
         return "11110";
-    else if(strcmp(t,"R31")==0)
+    else if(strcmp(t,"R31")==0 || strcmp(t,"R31\n")==0)
         return "11111";
+    else
+        return NULL;
+    
 
         /*char* temp = instr_v[i];
 
@@ -89,31 +92,31 @@ char* register_translator(char* t) // 5 bit representations of register numbers
 /* utility function for binary encoding 
    of the registers in the instructions of X format
 */
-void src_trgts_reg_translate_for_x_format(char* instr_v[])
+void src_trgts_reg_translate_for_x_format(char* instr_v[], char *bin_enc)
 {
     char* temp1=register_translator(instr_v[2]);
+    char* temp2=register_translator(instr_v[1]);
+    char* temp3=register_translator(instr_v[3]);
     for(i=6;i<=10;i++)
         bin_enc[i]=temp1[i-6];
-    temp1=register_translator(instr_v[1]);
     for(i=11;i<=15;i++)
-        bin_enc[i]=temp1[i-11];
-    
+        bin_enc[i]=temp2[i-11];
     if(strcmp(instr_v[0],"extsw")!=0)
     {
-        temp1=register_translator(instr_v[3]);
         for(i=16;i<=20;i++)
-            bin_enc[i]=temp1[i-16];
+            bin_enc[i]=temp3[i-16];
     }
 
     else
     {
         for(i=16;i<=20;i++)
             bin_enc[i]='0';
-    }   
+    }
 }
 
 char* and(int instr_c, char *instr_v[])
 {
+    char *bin_enc = (char *)malloc(34 * sizeof(char));
     // PO  011111
     bin_enc[0]='0';
     for(i=1;i<=5;i++)
@@ -137,7 +140,7 @@ char* and(int instr_c, char *instr_v[])
     bin_enc[31]='0';
 
     // RS RA RB
-    src_trgts_reg_translate_for_x_format(instr_v);
+    src_trgts_reg_translate_for_x_format(instr_v, bin_enc);
 
     bin_enc[32] = ' ';
     bin_enc[33] = 'X';
@@ -148,6 +151,7 @@ char* and(int instr_c, char *instr_v[])
 
 char* nand(int instr_c, char *instr_v[])
 {
+    char *bin_enc = (char *)malloc(34 * sizeof(char));
     // PO 011111 sym_tab_text_head = NULL; sym_tab_text_head = NULL;
 
 
@@ -175,7 +179,7 @@ char* nand(int instr_c, char *instr_v[])
     bin_enc[31]='0';
 
     // RS RA RB
-    src_trgts_reg_translate_for_x_format(instr_v);
+    src_trgts_reg_translate_for_x_format(instr_v, bin_enc);
 
     bin_enc[32] = ' ';
     bin_enc[33] = 'X';
@@ -186,6 +190,7 @@ char* nand(int instr_c, char *instr_v[])
 
 char* or(int instr_c, char *instr_v[])
 {
+    char *bin_enc = (char *)malloc(34 * sizeof(char));
     // PO 011111
     bin_enc[0]='0';
     for(i=1;i<=5;i++)
@@ -209,7 +214,7 @@ char* or(int instr_c, char *instr_v[])
     bin_enc[31]='0';
 
     // RS RA RB
-     src_trgts_reg_translate_for_x_format(instr_v);
+     src_trgts_reg_translate_for_x_format(instr_v, bin_enc);
 
     bin_enc[32] = ' ';
     bin_enc[33] = 'X';
@@ -220,6 +225,7 @@ char* or(int instr_c, char *instr_v[])
 
 char* xor(int instr_c, char *instr_v[])
 {
+    char *bin_enc = (char *)malloc(34 * sizeof(char));
     // PO 011111
     bin_enc[0]='0';
     for(i=1;i<=5;i++)
@@ -243,7 +249,7 @@ char* xor(int instr_c, char *instr_v[])
     bin_enc[31]='0';
 
     // RS RA RB
-    src_trgts_reg_translate_for_x_format(instr_v);
+    src_trgts_reg_translate_for_x_format(instr_v, bin_enc);
 
     bin_enc[32] = ' ';
     bin_enc[33] = 'X';
@@ -251,145 +257,6 @@ char* xor(int instr_c, char *instr_v[])
 
     return bin_enc;
 }
-
-char* extsw(int instr_c, char *instr_v[])
-{
-    // PO 011111
-    bin_enc[0]='0';
-    for(i=1;i<=5;i++)
-    {
-        bin_enc[i]='1';
-    }
-
-    // XO 1111011010
-    for(i=21;i<=24;i++)
-    {
-        bin_enc[i]='1';
-    }
-    bin_enc[25]='0';
-    bin_enc[26]='1';
-    bin_enc[27]='1';
-    bin_enc[28]='0';
-    bin_enc[29]='1';
-    bin_enc[30]='0';
-
-    // Rc
-    bin_enc[31]='0';
-
-    // RS RA RB
-    src_trgts_reg_translate_for_x_format(instr_v);
-
-    bin_enc[32] = ' ';
-    bin_enc[33] = 'X';
-    bin_enc[34] = '\0';
-
-    return bin_enc;
-}
-
-char* sld(int instr_c, char *instr_v[])
-{
-    // PO 011111
-    bin_enc[0]='0';
-    for(i=1;i<=5;i++)
-    {
-        bin_enc[i]='1';
-    }
-
-    // XO 0000011011
-    for(i=21;i<=25;i++)
-    {
-        bin_enc[i]='0';
-    }
-    bin_enc[26]='1';
-    bin_enc[27]='1';
-    bin_enc[28]='0';
-    bin_enc[29]='1';
-    bin_enc[30]='1';
-
-    // Rc
-    bin_enc[31]='0';
-
-    // RS RA RB
-    src_trgts_reg_translate_for_x_format(instr_v);
-
-    bin_enc[32] = ' ';
-    bin_enc[33] = 'X';
-    bin_enc[34] = '\0';
-
-    return bin_enc;
-}
-
-char* srd(int instr_c, char *instr_v[])
-{
-    // PO 011111
-    bin_enc[0]='0';
-    for(i=1;i<=5;i++)
-    {
-        bin_enc[i]='1';
-    }
-
-    // XO 1000011011
-    bin_enc[21]='1';
-    for(i=22;i<=25;i++)
-    {
-        bin_enc[i]='0';
-    }
-    bin_enc[26]='1';
-    bin_enc[27]='1';
-    bin_enc[28]='0';
-    bin_enc[29]='1';
-    bin_enc[30]='1';
-
-    // Rc
-    bin_enc[31]='0';
-
-    // RS RA RB
-    src_trgts_reg_translate_for_x_format(instr_v);
-
-    bin_enc[32] = ' ';
-    bin_enc[33] = 'X';
-    bin_enc[34] = '\0';
-
-    return bin_enc;
-}
-
-char* srad(int instr_c, char *instr_v[])
-{
-    // PO 011111
-    bin_enc[0]='0';
-    for(i=1;i<=5;i++)
-    {
-        bin_enc[i]='1';
-    }
-
-    // XO 1100011010
-    bin_enc[21]='1';
-    bin_enc[22]='1';
-    for(i=23;i<=25;i++)
-    {
-        bin_enc[i]='0';
-    }
-    bin_enc[26]='1';
-    bin_enc[27]='1';
-    bin_enc[28]='0';
-    bin_enc[29]='1';
-    bin_enc[30]='0';
-
-    // Rc
-    bin_enc[31]='0';
-
-    // RS RA RB
-    src_trgts_reg_translate_for_x_format(instr_v);
-
-    bin_enc[32] = ' ';
-    bin_enc[33] = 'X';
-    bin_enc[34] = '\0';
-
-    return bin_enc;
-}
-
-
-
 
 char* add(int instr_c, char *instr_v[])
 {
@@ -512,7 +379,7 @@ char* addi(int instr_c, char *instr_v[])
     for(i=l-1;i>=0;i--){                                              //Extracting the immediate value integer form the string array
         a = instr_v[3][i];
         int a1 = a-48;
-        printf("a:%c, a1:%d\n", a, a1);
+        //printf("a:%c, a1:%d\n", a, a1);
         b = b + a1*pow(10,l-1-i);
     }
 
@@ -706,4 +573,68 @@ char* subf(int instr_c, char *instr_v[])
     bin_final = strcpy(bin_final, instr);
 
     return bin_final;
+}
+
+char *ld(int instr_c, char *instr_v[])
+{
+    char instr[] = "11101000000000000000000000000000 DS";
+    char *RT = register_translator(instr_v[1]);
+    char *RA = register_translator(instr_v[3]);
+    for(i=0;i < (2 * strlen(RT));i++)
+    {
+        if(i>=strlen(RT))
+            instr[i+6] = RA[i-strlen(RT)];
+        else
+            instr[i+6] = RT[i];
+    }
+    int ds = atoi(instr_v[2]);
+    int a[100];
+    for(i=0;ds>0;i++)
+    {
+        a[i]=ds%2;
+        ds=ds/2;
+    }
+    int length = i;
+    int j=29;
+    for(i=0;i<length;i++)
+    {
+        instr[j] = (char)(a[i] + '0');
+        j--;
+    }
+    printf("ld instruction:%s\n", instr);
+    char *instr_bin = (char *)malloc(sizeof(instr));
+    strcpy(instr_bin, instr);
+    return instr_bin;
+}
+
+char *std(int instr_c, char *instr_v[])
+{
+    char instr[] = "11111000000000000000000000000000 DS";
+    char *RS = register_translator(instr_v[1]);
+    char *RA = register_translator(instr_v[3]);
+    for(i=0;i < (2 * strlen(RS));i++)
+    {
+        if(i>=strlen(RS))
+            instr[i+6] = RA[i-strlen(RS)];
+        else
+            instr[i+6] = RS[i];
+    }
+    int ds = atoi(instr_v[2]);
+    int a[100];
+    for(i=0;ds>0;i++)
+    {
+        a[i]=ds%2;
+        ds=ds/2;
+    }
+    int length = i;
+    int j=29;
+    for(i=0;i<length;i++)
+    {
+        instr[j] = (char)(a[i] + '0');
+        j--;
+    }
+    printf("ld instruction:%s\n", instr);
+    char *instr_bin = (char *)malloc(sizeof(instr));
+    strcpy(instr_bin, instr);
+    return instr_bin;
 }

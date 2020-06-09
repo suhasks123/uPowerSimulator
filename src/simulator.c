@@ -100,7 +100,7 @@ void read_bin()
         strcpy(bin_lines[i].instr, ins);
         strcpy(bin_lines[i].type, typ);
         i++;
-        free(buffer);
+        //free(buffer);
 	}
 }
 

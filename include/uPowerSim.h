@@ -90,7 +90,7 @@ char check_instruction_type(char *inst);
 
 
 char* register_translator(char* t);
-void src_trgts_reg_translate_for_x_format(char* instr_v[]);
+void src_trgts_reg_translate_for_x_format(char* instr_v[], char *);
 char* and(int instr_c, char *instr_v[]);
 char* nand(int instr_c, char *instr_v[]);
 char* or(int instr_c, char *instr_v[]);
@@ -103,6 +103,8 @@ char* add(int instr_c, char *instr_v[]);
 char* addi(int instr_c, char *instr_v[]);
 char* beq(int instr_c, char *instr_v[], int curr_addr, struct symbol_table_text* ptr);
 char* subf(int instr_c, char *instr_v[]);
+char *ld(int instr_c, char *instr_v[]);
+char *std(int instr_c, char *instr_v[]);
 char *translate_instr(char *instr, int cia);
 
 #endif
