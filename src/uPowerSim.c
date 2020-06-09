@@ -21,7 +21,23 @@ int main(int argc, char *argv[])
         printf("Relative address : %d\n", ptr->rel_add);
         ptr = ptr->next;
     }
+
+	pass_1_data();
+    struct symbol_table_data* p;
+	p = sym_tab_data_head;
+    while(p!=NULL)
+    {
+        printf("Label : %s\n", p->label);
+        printf("Data : %s\n", p->data);
+        p = p->next;
+    }
+
+	printf("In read bin");
 	pass_2();
+	//initialize();
+	printf("Registers after execution:\n");
+	//display_registers();
+
 	return 0;
 }
 
@@ -67,7 +83,6 @@ void pass_1_text()
 	{
 		if(strcmp(f_lines[i].asm_line, ".text\n")==0)
 		{
-            printf("Lmao\n");
 			flag = 1;
 			f_lines[i].type = 'D';
 			continue;
@@ -83,7 +98,6 @@ void pass_1_text()
 		// If the line is under .text and is not blank or newline
 		if(flag == 1 && f_lines[i].asm_line[0] != '\n')
 		{
-            printf("Lmao\n");
 			// Check for label
 			if(f_lines[i].asm_line[strlen(f_lines[i].asm_line)-2]==':')
 			{
@@ -128,8 +142,7 @@ void pass_1_text()
  * 
  * For example,
  * .data
- * numbers:	text_sym  = fopen("text.sym", "r");
-
+ * numbers:
  * .word 1, 2, 3, 4, 5, 6
  */
 
@@ -204,21 +217,20 @@ void pass_2()
 {
 	int i;
 	char *instr_bin;
-	FILE *f;
-	f = fopen("upower.bin", "w");
-	if (f == NULL) 
+	bin_file = fopen("upower.bin", "w+");
+	if (bin_file == NULL) 
     { 
         printf("Could not open file");
     }
 	//printf("Pass2: %d\n", n_instr);
 	for (i = 0;i < n_instr;i++)
 	{
-		//printf("%s\n", i_lines[i].asm_line);
+		printf("%s\n", i_lines[i].asm_line);
 		instr_bin = translate_instr(i_lines[i].asm_line,i);
 		printf("%s\n", instr_bin);
-		fprintf(f, "%s\n", instr_bin);
+		fprintf(bin_file, "%s\n", instr_bin);
 	}
-	fclose(f);
+	fclose(bin_file);
 }
 
 /*

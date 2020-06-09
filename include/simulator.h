@@ -27,5 +27,6 @@ void instr_typ_ds(char *bin_instr);
 void instr_typ_d(char *bin_instr);
 int instr_typ_b(char *bin_instr);
 void instr_typ_xo(char *bin_instr);
+void display_registers();
 
 #endif

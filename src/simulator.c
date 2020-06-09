@@ -12,10 +12,25 @@ void initialize()
 {
     CIA = 0;
     NIA = 1;
+    char ch;
     int displacement;
     read_bin();
+    printf("Assembly complete. Binary ready for execution. Do you want to execute it step by step (y or n): ");
+    ch = getchar();
+    int flag = 0;
     while(CIA != n_instr)
     {
+        if(ch == 'y')
+        {
+            if(flag == 0)
+            {
+                printf("Press enter to start the execution.....");
+                flag = 1;
+            }
+            else
+                printf("Press enter to continue to the next instruction.....");
+            getchar();
+        }
         displacement = 1;
         if(strcmp(bin_lines[CIA].type, "X")==0)
         {
@@ -43,6 +58,10 @@ void initialize()
         }
 
         CIA += displacement;
+        if(ch == 'y')
+        {
+            display_registers();
+        }
     }
 }
 
@@ -53,6 +72,12 @@ void read_bin()
     char *buffer = NULL;
     size_t size = 0;
     char ins[100], typ[100];
+    bin_file = fopen("upower.bin", "r");
+    if(bin_file == NULL)
+    {
+        perror("Binary file not found");
+        return;
+    }
     while(getline(&buffer, &size, bin_file) != -1)
 	{
         j=0;
@@ -75,7 +100,22 @@ void read_bin()
         strcpy(bin_lines[i].instr, ins);
         strcpy(bin_lines[i].type, typ);
         i++;
+        free(buffer);
 	}
+}
+
+void display_registers()
+{
+    printf("Special Registers:\n");
+    printf("LR: %ld \tCIA: %ld\n", LR, CIA);
+    printf("NIA: %ld\tSRR0: %ld\n", NIA, SRR0);
+    printf("CR: %d\n", CR);
+    printf("General Purpose Registers:\n");
+    int i;
+    for(i=0;i<31;i+=2)
+    {
+        printf("R%d: %ld\tR%d: %ld\n", i, R[i], i+1, R[i+1]);
+    }
 }
 
 int bin_to_int(char* bin)

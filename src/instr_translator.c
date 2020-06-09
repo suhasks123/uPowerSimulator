@@ -505,14 +505,17 @@ char* addi(int instr_c, char *instr_v[])
 
     //printf("%s ", instr);
 
-    l = strlen(instr_v[3]);   
+    l = strlen(instr_v[3]);
+    l--;
     b=0;
 
     for(i=l-1;i>=0;i--){                                              //Extracting the immediate value integer form the string array
         a = instr_v[3][i];
         int a1 = a-48;
+        printf("a:%c, a1:%d\n", a, a1);
         b = b + a1*pow(10,l-1-i);
     }
+
     for(i=15;i>=0;i--){                                               //Converting immediate to a 16-bit binary
         imm[i] = b%2;
         b/=2;
@@ -526,7 +529,6 @@ char* addi(int instr_c, char *instr_v[])
         else
             instr[k+j] = '1';
     }
-    //printf("%s", instr);  
 
     char* bin_final = (char*) malloc(sizeof(instr));
     bin_final = strcpy(bin_final, instr);  
