@@ -34,9 +34,9 @@ int main(int argc, char *argv[])
 
 	printf("In read bin");
 	pass_2();
-	//initialize();
+	initialize();
 	printf("Registers after execution:\n");
-	//display_registers();
+	display_registers();
 
 	return 0;
 }

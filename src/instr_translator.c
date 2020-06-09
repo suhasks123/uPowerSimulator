@@ -91,10 +91,10 @@ char* register_translator(char* t) // 5 bit representations of register numbers
 */
 void src_trgts_reg_translate_for_x_format(char* instr_v[])
 {
-    char* temp1=register_translator(instr_v[1]);
+    char* temp1=register_translator(instr_v[2]);
     for(i=6;i<=10;i++)
         bin_enc[i]=temp1[i-6];
-    temp1=register_translator(instr_v[2]);
+    temp1=register_translator(instr_v[1]);
     for(i=11;i<=15;i++)
         bin_enc[i]=temp1[i-11];
     

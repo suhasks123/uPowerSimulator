@@ -7,5 +7,5 @@ beq R6, R7, label3
 add R1, R4, R2
 subf R3, R4, R5
 label3:
-addi R6, R6, 20
-
+addi R6, R6, 9
+and R7, R6, R4
