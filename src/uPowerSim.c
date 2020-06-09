@@ -263,7 +263,7 @@ char *translate_instr(char *instr, int cia)
 	if (strcmp(instr_v[0], "addi") == 0)
 		instr_hex = addi(instr_c, instr_v);	
 	if (strcmp(instr_v[0], "beq") == 0)
-		instr_hex = beq(instr_c, instr_v, cia);
+		instr_hex = beq(instr_c, instr_v, cia, sym_tab_text_head);
 	if (strcmp(instr_v[0], "and") == 0)
 		instr_hex = and(instr_c, instr_v);	
 	if (strcmp(instr_v[0], "or") == 0)

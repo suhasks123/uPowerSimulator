@@ -536,44 +536,37 @@ char* addi(int instr_c, char *instr_v[])
     return bin_final;
 }
 
-char* beq(int instr_c, char *instr_v[], int curr_addr)
+char* beq(int instr_c, char *instr_v[], int curr_addr, struct symbol_table_text* ptr)
 {
-    int32_t instr_hex;
     char* temp;
     char instr[] = "01001100000000000000000000000000 B";                     //Binary with BD,BI and BO parts filled with 0's
-    int addr,j,k=0,l,b=0,a;
-    int bd[14],reg[5];
-    struct symbol_table_text* ptr = sym_tab_text_head;
-    while (ptr->next!=NULL)
+    int addr = 0, j, k = 0, l, b = 0, a;
+    int bd[14], reg[5];
+	// struct symbol_table_text* ptr = sym_tab_text_head;
+    char instr_v3[] = "";
+
+    while (ptr!= NULL)
     {
         temp = ptr->label;
-        if(strcmp(temp, instr_v[3])==0)                         //Finding address of label to jump to
+        strcat(temp, "\n");
+        if(strcmp(temp, instr_v[3]) == 0)                         //Finding address of label to jump to
         {
             addr = ptr->rel_add;
             break;
         }
-        else
-        {
-            ptr = ptr->next;
-        }
-    }    
-    if(ptr->next==NULL)                                         //Checking the last instruction
+        ptr = ptr->next;
+    }               
+    if(ptr == NULL)
     {
-        temp = ptr->label;
-        if(strcmp(temp, instr_v[3])==0){
-            addr = ptr->rel_add;
-        }
-        else
-        {
-            printf("Invalid label\n");
-            return '\0';
-        }
+        printf("Invalid label\n");
+        return "\0";
     }
-    b = curr_addr - addr;                                   //The branch displacement
+
+    b = curr_addr - addr;                                       //The branch displacement
     k = 16;
-    if(b>=0)                                                    //Branch displacement as a 14-bit binary
+    if(b < 0)                                                    //Branch displacement as a 14-bit binary
     {
-        for(i=14;i>=0;i--)
+        for(i=13;i>=0;i--)
         {   
             bd[i] = b%2;
             b/=2;
@@ -589,8 +582,8 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
     else                                                        //If Branch Displacement<0, calculate binary using 1's complement of -b-1;
     {
         b = b*(-1);
-        b-=1;
-        for(i=14;i>=0;i--)
+        b -= 1;
+        for(i=13;i>=0;i--)
         {   
             bd[i] = b%2;
             b/=2;
@@ -605,7 +598,8 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
     }
     //char* bin_final = (char*) malloc(sizeof(instr));
     //bin_final = strcpy(bin_final, instr);
-    for(i=1;i<instr_c-1;i++){                                   //Finding the register numbers to be compared.
+    k = 6;
+    for(i=1;i <= 2;i++){                                   //Finding the register numbers to be compared.
         
         temp = instr_v[i];
 
@@ -621,9 +615,8 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
             int a1 = a-48;
             b = b + a1*pow(10,l-j);
 
-        //    printf("%d ",l);
         }
-        //printf("%d ",b);
+        // printf("b : %d\n",b);
   
         if(b>31)
         {
@@ -639,8 +632,6 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
         {
             printf("%d", reg[j]);
         }*/
-        k=6;
-
         for(j=0;j<5;j++)                                                //Making the changes in the binary
         {
             if(reg[j]==0)
@@ -649,13 +640,14 @@ char* beq(int instr_c, char *instr_v[], int curr_addr)
                 instr[k+j] = '1';
         }
         k+=5;
-      //  printf("%s ", instr);
+    //    printf("%s ", instr);
     }    
 
     char* bin_final = (char*) malloc(sizeof(instr)*sizeof(char));
     bin_final = strcpy(bin_final, instr);
 
     return bin_final;
+    // return "";
 }
 
 char* subf(int instr_c, char *instr_v[])
