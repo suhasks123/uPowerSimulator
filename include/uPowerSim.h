@@ -101,7 +101,7 @@ char* srd(int instr_c, char *instr_v[]);
 char* srad(int instr_c, char *instr_v[]);
 char* add(int instr_c, char *instr_v[]);
 char* addi(int instr_c, char *instr_v[]);
-char* beq(int instr_c, char *instr_v[], int curr_addr);
+char* beq(int instr_c, char *instr_v[], int curr_addr, struct symbol_table_text* ptr);
 char* subf(int instr_c, char *instr_v[]);
 char *translate_instr(char *instr, int cia);
 
