@@ -54,17 +54,15 @@ struct symbol_table_data
      */
     char *type;
 
-    /* The data is written as a string to the data symbol
-     * table file.
-     * It is then converted back to its original type using
-     * sscanf().
+    /*
+     * Currently only integer data is able to be stored
      */
     char *data;
     struct symbol_table_data *next;
 };
 
-static struct symbol_table_text *sym_tab_text_head = NULL;
-static struct symbol_table_data *sym_tab_data_head = NULL;
+extern struct symbol_table_text *sym_tab_text_head;
+extern struct symbol_table_data *sym_tab_data_head;
 //struct symbol_table *sym_tab_current;
 
 //Global Variables
@@ -101,7 +99,7 @@ char* srd(int instr_c, char *instr_v[]);
 char* srad(int instr_c, char *instr_v[]);
 char* add(int instr_c, char *instr_v[]);
 char* addi(int instr_c, char *instr_v[]);
-char* beq(int instr_c, char *instr_v[], int curr_addr, struct symbol_table_text* ptr);
+char* beq(int instr_c, char *instr_v[], int curr_addr);
 char* subf(int instr_c, char *instr_v[]);
 char *ld(int instr_c, char *instr_v[]);
 char *std(int instr_c, char *instr_v[]);

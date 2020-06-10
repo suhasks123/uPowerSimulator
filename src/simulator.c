@@ -4,8 +4,8 @@
 #include<math.h>
 #include<string.h>
 
-#include "../include/uPowerSim.h"
-#include "../include/simulator.h"
+#include "uPowerSim.h"
+#include "simulator.h"
 
 
 void initialize()
@@ -63,6 +63,7 @@ void initialize()
             display_registers();
         }
     }
+    return;
 }
 
 void read_bin()
@@ -415,6 +416,12 @@ void instr_typ_ds(char *bin_instr)
                 int32_t low, high;
                 sscanf(temp->data, "%"PRId32"", &low);
                 temp=temp->next;
+                if(temp == NULL)
+                {
+                    high = 0;
+                    R[RT] = ((int64_t)high) << 32 | low;
+                    break;
+                }
                 sscanf(temp->data, "%"PRId32"", &high);
                 R[RT] = ((int64_t)high) << 32 | low;
             }
@@ -432,7 +439,7 @@ void instr_typ_ds(char *bin_instr)
         int target_address = R[RA] + DS;
         while(temp != NULL)
         {
-            if(ctr == target_address - 1)
+            if(ctr == target_address - 1 || (ctr == target_address && target_address == 0))
             {
                 struct symbol_table_data *s_temp1, *s_temp2;
 				s_temp1 = (struct symbol_table_data *)malloc(sizeof(struct symbol_table_data));
@@ -446,13 +453,29 @@ void instr_typ_ds(char *bin_instr)
                 low = (int32_t)(R[RT] & 0xFFFFFFFFLL);
                 sprintf(highstr, "%"PRId32"", high);
                 sprintf(lowstr, "%"PRId32"", low);
+                printf("high:%s  low:%s\n", highstr, lowstr);
                 s_temp1->data = highstr;
                 s_temp2->data = lowstr;
+                if(target_address == 0)
+                {
+                    s_temp2->next = s_temp1;
+                    s_temp1->next = temp;
+                    sym_tab_data_head = s_temp2;
+                    break;
+                }
                 s_temp2->next = s_temp1;
                 s_temp1->next = temp->next;
                 temp->next = s_temp2;
+                break;
             }
             ctr++;
+            temp = temp->next;
+        }
+
+        temp = sym_tab_data_head;
+        while(temp!=NULL)
+        {
+            printf("data:%s\n", temp->data);
             temp = temp->next;
         }
     }

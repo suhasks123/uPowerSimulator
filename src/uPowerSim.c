@@ -4,18 +4,21 @@
 #include<math.h>
 #include<string.h>
 
-#include "../include/uPowerSim.h"
-#include "../include/simulator.h"
+#include "uPowerSim.h"
+#include "simulator.h"
+
+struct symbol_table_text *sym_tab_text_head = NULL;
+struct symbol_table_data *sym_tab_data_head = NULL;
 
 int main(int argc, char *argv[])
 {
 	parse_command(argv);
 	read_asm();
-
 	pass_1_text();
 	struct symbol_table_text* ptr;
     ptr = sym_tab_text_head;
-    while(ptr!=NULL)
+    printf("Symbol Table - Instruction:\n");
+	while(ptr!=NULL)
     {
         printf("Label : %s\n", ptr->label);
         printf("Relative address : %d\n", ptr->rel_add);
@@ -25,7 +28,8 @@ int main(int argc, char *argv[])
 	pass_1_data();
     struct symbol_table_data* p;
 	p = sym_tab_data_head;
-    while(p!=NULL)
+    printf("Symbol Table - Data:\n");
+	while(p!=NULL)
     {
         printf("Label : %s\n", p->label);
         printf("Data : %s\n", p->data);
@@ -143,17 +147,19 @@ void pass_1_text()
  * For example,
  * .data
  * numbers:
- * .word 1, 2, 3, 4, 5, 6
+ * .word 10
  */
 
 void pass_1_data()
 {
 	int flag = 0, i;
+	int llflag = 0;
 	char *token;
 	char *data_type, *data;
+	struct symbol_table_data *ptr;
 	for(i=0;i<n_lines;i++)
 	{
-		if(strcmp(f_lines[i].asm_line, ".data") == 0)
+		if(strcmp(f_lines[i].asm_line, ".data\n") == 0)
 		{
 			flag = 1;
 			f_lines[i].type = 'D';
@@ -161,7 +167,7 @@ void pass_1_data()
 		}
 
 		if((f_lines[i].asm_line[0] == '.') &&
-	        (strcmp(f_lines[i].asm_line, ".data") != 0))
+	        (strcmp(f_lines[i].asm_line, ".data\n") != 0))
 		{
 			flag = 0;
 			f_lines[i].type = 'D';
@@ -169,11 +175,10 @@ void pass_1_data()
 		}
 
 		// If the line is under .data and is not blank or newline
-		if(flag == 1 && f_lines[i].asm_line[0] != '\0' &&
-	        f_lines[i].asm_line[0] != '\n')
+		if(flag == 1 && f_lines[i].asm_line[0] != '\n')
 		{
 			// Check for label
-			if(f_lines[i].asm_line[strlen(f_lines[i].asm_line)-1] == ':')
+			if(f_lines[i].asm_line[strlen(f_lines[i].asm_line)-2] == ':')
 			{
 				f_lines[i].type = 'L';
 				struct symbol_table_data *s_temp;
@@ -182,23 +187,38 @@ void pass_1_data()
 				// Create a string with the label name without ':'
 				char lname[sizeof(f_lines[i].asm_line)];
 				strcpy(lname, f_lines[i].asm_line);
-				lname[strlen(lname)-1] = '\0';
+				lname[strlen(lname)-2] = '\0';
+				char *temp = (char *)malloc(strlen(lname)*sizeof(char));
+				strcpy(temp, lname);
 
 				// Move on to the next line
 				i++;
 
 				//Tokenization
-				token = strtok(f_lines[i].asm_line, " ");
+				token = strtok(f_lines[i].asm_line, " \n");
 				data_type = token;
-				token = strtok(NULL, " ");
+				token = strtok(NULL, " \n");
 				data = token;
+
+				char *temp_data = (char *)malloc(strlen(data)*sizeof(char));
+				strcpy(temp_data, data);
 				
 				// Add data to the symbol table entry and connect it to the table
-				s_temp->label = lname;
+				s_temp->label = temp;
 				s_temp->type = data_type;
-				s_temp->data = data;
-				s_temp->next = sym_tab_data_head;
-				sym_tab_data_head = s_temp;
+				s_temp->data = temp_data;
+				s_temp->next = NULL;
+				if(llflag == 0)
+				{
+					llflag = 1;
+					sym_tab_data_head = s_temp;
+					ptr = s_temp;
+				}
+				else
+				{
+					ptr->next = s_temp;
+					ptr = ptr->next;
+				}
 				continue;
 			}
 
@@ -263,7 +283,7 @@ char *translate_instr(char *instr, int cia)
 	if (strcmp(instr_v[0], "addi") == 0)
 		instr_hex = addi(instr_c, instr_v);
 	if (strcmp(instr_v[0], "beq") == 0)
-		instr_hex = beq(instr_c, instr_v, cia, sym_tab_text_head);
+		instr_hex = beq(instr_c, instr_v, cia);
 	if (strcmp(instr_v[0], "and") == 0)
 		instr_hex = and(instr_c, instr_v);
 	if (strcmp(instr_v[0], "or") == 0)

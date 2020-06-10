@@ -18,6 +18,9 @@ struct bin_line
 
 struct bin_line bin_lines[100];
 
+// Main Memory
+int MainMemory[100];
+
 // Functions
 void initialize();
 void read_bin();

@@ -4,8 +4,8 @@
 #include<string.h>
 #include<math.h>
 
-#include "../include/uPowerSim.h"
-#include "../include/simulator.h"
+#include "uPowerSim.h"
+#include "simulator.h"
 
 int i;
 
@@ -403,13 +403,13 @@ char* addi(int instr_c, char *instr_v[])
     return bin_final;
 }
 
-char* beq(int instr_c, char *instr_v[], int curr_addr, struct symbol_table_text* ptr)
+char* beq(int instr_c, char *instr_v[], int curr_addr)
 {
     char* temp;
     char instr[] = "01001100000000000000000000000000 B";                     //Binary with BD,BI and BO parts filled with 0's
     int addr = 0, j, k = 0, l, b = 0, a;
     int bd[14], reg[5];
-	// struct symbol_table_text* ptr = sym_tab_text_head;
+	struct symbol_table_text* ptr = sym_tab_text_head;
     char instr_v3[] = "";
 
     while (ptr!= NULL)
@@ -601,7 +601,6 @@ char *ld(int instr_c, char *instr_v[])
         instr[j] = (char)(a[i] + '0');
         j--;
     }
-    printf("ld instruction:%s\n", instr);
     char *instr_bin = (char *)malloc(sizeof(instr));
     strcpy(instr_bin, instr);
     return instr_bin;
@@ -633,7 +632,6 @@ char *std(int instr_c, char *instr_v[])
         instr[j] = (char)(a[i] + '0');
         j--;
     }
-    printf("ld instruction:%s\n", instr);
     char *instr_bin = (char *)malloc(sizeof(instr));
     strcpy(instr_bin, instr);
     return instr_bin;
