@@ -8,5 +8,3 @@ bin_upowersim_SOURCES = \
  include/uPowerSim.h\
  include/simulator.h
 bin_upowersim_CPPFLAGS = -I$(top_srcdir)/include
-#bin_upowersim_LDADD = libm.so
-#bin_upowersim_LDFLAGS = -lm

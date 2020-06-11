@@ -1,12 +1,11 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<inttypes.h>
-#include<math.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <inttypes.h>
+#include <math.h>
+#include <string.h>
 
 #include "uPowerSim.h"
 #include "simulator.h"
-
 
 void initialize()
 {
@@ -15,55 +14,72 @@ void initialize()
     char ch;
     int displacement;
     read_bin();
+    load_memory();
     printf("Assembly complete. Binary ready for execution. Do you want to execute it step by step (y or n): ");
+    fflush(stdin);
     ch = getchar();
     int flag = 0;
-    while(CIA != n_instr)
+    while (CIA != n_instr)
     {
-        if(ch == 'y')
+        if (ch == 'y')
         {
-            if(flag == 0)
+            if (flag == 0)
             {
                 printf("Press enter to start the execution.....");
                 flag = 1;
             }
             else
                 printf("Press enter to continue to the next instruction.....");
+            fflush(stdin);
             getchar();
         }
         displacement = 1;
-        if(strcmp(bin_lines[CIA].type, "X")==0)
+        if (strcmp(bin_lines[CIA].type, "X") == 0)
         {
             instr_typ_x(bin_lines[CIA].instr);
         }
 
-        if(strcmp(bin_lines[CIA].type, "XO")==0)
+        if (strcmp(bin_lines[CIA].type, "XO") == 0)
         {
             instr_typ_xo(bin_lines[CIA].instr);
         }
 
-        if(strcmp(bin_lines[CIA].type, "D")==0)
+        if (strcmp(bin_lines[CIA].type, "D") == 0)
         {
             instr_typ_d(bin_lines[CIA].instr);
         }
 
-        if(strcmp(bin_lines[CIA].type, "B")==0)
+        if (strcmp(bin_lines[CIA].type, "B") == 0)
         {
             displacement = instr_typ_b(bin_lines[CIA].instr);
         }
 
-        if(strcmp(bin_lines[CIA].type, "DS")==0)
+        if (strcmp(bin_lines[CIA].type, "DS") == 0)
         {
             instr_typ_ds(bin_lines[CIA].instr);
         }
 
         CIA += displacement;
-        if(ch == 'y')
+        if (ch == 'y')
         {
             display_registers();
         }
     }
     return;
+}
+
+void load_memory()
+{
+    struct symbol_table_data *temp;
+    temp = sym_tab_data_head;
+    int i;
+    i = 0;
+    while (temp != NULL && i != 100)
+    {
+        strcpy(MainMemory[i], temp->data);
+        temp = temp->next;
+        i++;
+    }
 }
 
 void read_bin()
@@ -74,24 +90,24 @@ void read_bin()
     size_t size = 0;
     char ins[100], typ[100];
     bin_file = fopen("upower.bin", "r");
-    if(bin_file == NULL)
+    if (bin_file == NULL)
     {
         perror("Binary file not found");
         return;
     }
-    while(getline(&buffer, &size, bin_file) != -1)
-	{
-        j=0;
-        while(buffer[j] != ' ')
+    while (getline(&buffer, &size, bin_file) != -1)
+    {
+        j = 0;
+        while (buffer[j] != ' ')
         {
             ins[j] = buffer[j];
             j++;
         }
         ins[j] = '\0';
 
-        k=0;
+        k = 0;
         j++;
-        while(buffer[j] != '\0' && buffer[j] != '\r' && buffer[j] != '\n')
+        while (buffer[j] != '\0' && buffer[j] != '\r' && buffer[j] != '\n')
         {
             typ[k] = buffer[j];
             k++;
@@ -101,8 +117,7 @@ void read_bin()
         strcpy(bin_lines[i].instr, ins);
         strcpy(bin_lines[i].type, typ);
         i++;
-        //free(buffer);
-	}
+    }
 }
 
 void display_registers()
@@ -113,22 +128,22 @@ void display_registers()
     printf("CR: %d\n", CR);
     printf("General Purpose Registers:\n");
     int i;
-    for(i=0;i<31;i+=2)
+    for (i = 0; i < 31; i += 2)
     {
-        printf("R%d: %ld\tR%d: %ld\n", i, R[i], i+1, R[i+1]);
+        printf("R%d: %ld\tR%d: %ld\n", i, R[i], i + 1, R[i + 1]);
     }
 }
 
-int bin_to_int(char* bin)
+int bin_to_int(char *bin)
 {
     int l = strlen(bin);
     int i, j, b = 0;
     char a;
-    for(i = l-1; i>=0; i--)
+    for (i = l - 1; i >= 0; i--)
     {
         a = bin[i];
-        int a1 = a-48;
-        b = b + a1*pow(2,l-i-1);
+        int a1 = a - 48;
+        b = b + a1 * pow(2, l - i - 1);
     }
     return b;
 }
@@ -139,34 +154,34 @@ void instr_typ_x(char *bin_instr)
     int RS, RA, RB, Rc, PO, XO;
     char sPO[7], sXO[11];
     int i;
-    for(i=0;i<32;i++)
+    for (i = 0; i < 32; i++)
     {
-        if(i<6)
+        if (i < 6)
             sPO[i] = bin_instr[i];
-        if(i==6)
+        if (i == 6)
             sPO[i] = '\0';
 
-        if(i>=6 && i<11)
-            sRS[i-6] = bin_instr[i];
-        if(i==11)
-            sRS[i-6] = '\0';
+        if (i >= 6 && i < 11)
+            sRS[i - 6] = bin_instr[i];
+        if (i == 11)
+            sRS[i - 6] = '\0';
 
-        if(i>=11 && i<16)
-            sRA[i-11] = bin_instr[i];
-        if(i==16)
-            sRA[i-11] = '\0';
+        if (i >= 11 && i < 16)
+            sRA[i - 11] = bin_instr[i];
+        if (i == 16)
+            sRA[i - 11] = '\0';
 
-        if(i>=16 && i<21)
-            sRB[i-16] = bin_instr[i];
-        if(i==21)
-            sRB[i-16] = '\0';
+        if (i >= 16 && i < 21)
+            sRB[i - 16] = bin_instr[i];
+        if (i == 21)
+            sRB[i - 16] = '\0';
 
-        if(i>=21 && i<31)
-            sXO[i-21] = bin_instr[i];
-        if(i==31)
-            sXO[i-21] = '\0';
+        if (i >= 21 && i < 31)
+            sXO[i - 21] = bin_instr[i];
+        if (i == 31)
+            sXO[i - 21] = '\0';
 
-        if(i==31)
+        if (i == 31)
             sRc[0] = bin_instr[i];
         sRc[1] = '\0';
     }
@@ -179,25 +194,25 @@ void instr_typ_x(char *bin_instr)
     Rc = bin_to_int(sRc);
 
     // NAND
-    if(PO == 31 && XO == 476)
+    if (PO == 31 && XO == 476)
     {
         R[RA] = ~(R[RS] & R[RB]);
     }
 
     // OR
-    if(PO == 31 && XO == 444)
+    if (PO == 31 && XO == 444)
     {
         R[RA] = R[RS] | R[RB];
     }
 
     // AND
-    if(PO == 31 && XO == 28)
+    if (PO == 31 && XO == 28)
     {
         R[RA] = R[RS] & R[RB];
     }
 
     // XOR
-    if(PO == 31 && XO == 316)
+    if (PO == 31 && XO == 316)
     {
         R[RA] = R[RS] ^ R[RB];
     }
@@ -209,38 +224,38 @@ void instr_typ_xo(char *bin_instr)
     int RS, RA, RB, Rc, PO, XO, OE, RT;
     char sPO[7], sXO[10];
     int i;
-    for(i=0;i<32;i++)
+    for (i = 0; i < 32; i++)
     {
-        if(i<6)
+        if (i < 6)
             sPO[i] = bin_instr[i];
-        if(i==6)
+        if (i == 6)
             sPO[i] = '\0';
 
-        if(i>=6 && i<11)
-            sRT[i-6] = bin_instr[i];
-        if(i==11)
-            sRT[i-6] = '\0';
+        if (i >= 6 && i < 11)
+            sRT[i - 6] = bin_instr[i];
+        if (i == 11)
+            sRT[i - 6] = '\0';
 
-        if(i>=11 && i<16)
-            sRA[i-11] = bin_instr[i];
-        if(i==16)
-            sRA[i-11] = '\0';
+        if (i >= 11 && i < 16)
+            sRA[i - 11] = bin_instr[i];
+        if (i == 16)
+            sRA[i - 11] = '\0';
 
-        if(i>=16 && i<21)
-            sRB[i-16] = bin_instr[i];
-        if(i==21)
-            sRB[i-16] = '\0';
+        if (i >= 16 && i < 21)
+            sRB[i - 16] = bin_instr[i];
+        if (i == 21)
+            sRB[i - 16] = '\0';
 
-        if(i==21)
+        if (i == 21)
             sOE[0] = bin_instr[i];
         sOE[1] = '\0';
 
-        if(i>=22 && i<31)
-            sXO[i-22] = bin_instr[i];
-        if(i==31)
-            sXO[i-22] = '\0';
+        if (i >= 22 && i < 31)
+            sXO[i - 22] = bin_instr[i];
+        if (i == 31)
+            sXO[i - 22] = '\0';
 
-        if(i==31)
+        if (i == 31)
             sRc[0] = bin_instr[i];
         sRc[1] = '\0';
     }
@@ -254,13 +269,13 @@ void instr_typ_xo(char *bin_instr)
     Rc = bin_to_int(sRc);
 
     // Add
-    if(PO == 31 && OE == 0 && Rc == 0 && XO == 266)
+    if (PO == 31 && OE == 0 && Rc == 0 && XO == 266)
     {
         R[RT] = R[RA] + R[RB];
     }
 
     // Subtract
-    if(PO == 31 && OE == 0 && Rc == 0 && XO == 40)
+    if (PO == 31 && OE == 0 && Rc == 0 && XO == 40)
     {
         R[RT] = R[RB] - R[RA];
     }
@@ -272,28 +287,28 @@ void instr_typ_d(char *bin_instr)
     int RT, RA, SI, PO;
     char sPO[7];
     int i;
-    for(i=0;i<32;i++)
+    for (i = 0; i < 32; i++)
     {
-        if(i<6)
+        if (i < 6)
             sPO[i] = bin_instr[i];
-        if(i==6)
+        if (i == 6)
             sPO[i] = '\0';
 
-        if(i>=6 && i<11)
-            sRT[i-6] = bin_instr[i];
-        if(i==11)
-            sRT[i-6] = '\0';
+        if (i >= 6 && i < 11)
+            sRT[i - 6] = bin_instr[i];
+        if (i == 11)
+            sRT[i - 6] = '\0';
 
-        if(i>=11 && i<16)
-            sRA[i-11] = bin_instr[i];
-        if(i==16)
-            sRA[i-11] = '\0';
+        if (i >= 11 && i < 16)
+            sRA[i - 11] = bin_instr[i];
+        if (i == 16)
+            sRA[i - 11] = '\0';
 
-        if(i>=16 && i<=31)
-            sSI[i-16] = bin_instr[i];
+        if (i >= 16 && i <= 31)
+            sSI[i - 16] = bin_instr[i];
     }
-    if(i==32)
-        sSI[i-16] = '\0';
+    if (i == 32)
+        sSI[i - 16] = '\0';
 
     PO = bin_to_int(sPO);
     RT = bin_to_int(sRT);
@@ -301,7 +316,7 @@ void instr_typ_d(char *bin_instr)
     SI = bin_to_int(sSI);
 
     // Add immediate
-    if(PO == 14)
+    if (PO == 14)
     {
         R[RT] = R[RA] + SI;
     }
@@ -312,33 +327,33 @@ int instr_typ_b(char *bin_instr)
     char sPO[7], sBO[6], sBI[6], sBD[15], sAA[2], sLK[2];
     int PO, BO, BI, BD, AA, LK;
     int i;
-    for(i=0;i<32;i++)
+    for (i = 0; i < 32; i++)
     {
-        if(i<6)
+        if (i < 6)
             sPO[i] = bin_instr[i];
-        if(i==6)
+        if (i == 6)
             sPO[i] = '\0';
 
-        if(i>=6 && i<11)
-            sBO[i-6] = bin_instr[i];
-        if(i==11)
-            sBO[i-6] = '\0';
+        if (i >= 6 && i < 11)
+            sBO[i - 6] = bin_instr[i];
+        if (i == 11)
+            sBO[i - 6] = '\0';
 
-        if(i>=11 && i<16)
-            sBI[i-11] = bin_instr[i];
-        if(i==16)
-            sBI[i-11] = '\0';
+        if (i >= 11 && i < 16)
+            sBI[i - 11] = bin_instr[i];
+        if (i == 16)
+            sBI[i - 11] = '\0';
 
-        if(i>=16 && i<30)
-            sBD[i-16] = bin_instr[i];
-        if(i==30)
-            sBD[i-16] = '\0';
-        
-        if(i==30)
+        if (i >= 16 && i < 30)
+            sBD[i - 16] = bin_instr[i];
+        if (i == 30)
+            sBD[i - 16] = '\0';
+
+        if (i == 30)
             sAA[0] = bin_instr[i];
         sAA[1] = '\0';
 
-        if(i==31)
+        if (i == 31)
             sLK[0] = bin_instr[i];
         sLK[1] = '\0';
     }
@@ -350,9 +365,9 @@ int instr_typ_b(char *bin_instr)
     AA = bin_to_int(sAA);
     LK = bin_to_int(sLK);
 
-    if(PO == 19 && AA == 0 && LK == 0)
+    if (PO == 19 && AA == 0 && LK == 0)
     {
-        if(R[BO] == R[BI])
+        if (R[BO] == R[BI])
         {
             return BD;
         }
@@ -365,32 +380,32 @@ void instr_typ_ds(char *bin_instr)
     int RT, RA, DS, PO, XO;
     char sPO[7];
     int i;
-    for(i=0;i<32;i++)
+    for (i = 0; i < 32; i++)
     {
-        if(i<6)
+        if (i < 6)
             sPO[i] = bin_instr[i];
-        if(i==6)
+        if (i == 6)
             sPO[i] = '\0';
 
-        if(i>=6 && i<11)
-            sRT[i-6] = bin_instr[i];
-        if(i==11)
-            sRT[i-6] = '\0';
+        if (i >= 6 && i < 11)
+            sRT[i - 6] = bin_instr[i];
+        if (i == 11)
+            sRT[i - 6] = '\0';
 
-        if(i>=11 && i<16)
-            sRA[i-11] = bin_instr[i];
-        if(i==16)
-            sRA[i-11] = '\0';
+        if (i >= 11 && i < 16)
+            sRA[i - 11] = bin_instr[i];
+        if (i == 16)
+            sRA[i - 11] = '\0';
 
-        if(i>=16 && i<30)
-            sDS[i-16] = bin_instr[i];
-        if(i==30)
-            sDS[i-16] = '\0';
+        if (i >= 16 && i < 30)
+            sDS[i - 16] = bin_instr[i];
+        if (i == 30)
+            sDS[i - 16] = '\0';
 
-        if(i==30)
+        if (i == 30)
         {
             sXO[0] = bin_instr[i];
-            sXO[1] = bin_instr[i+1];
+            sXO[1] = bin_instr[i + 1];
             sXO[2] = '\0';
             break;
         }
@@ -403,80 +418,26 @@ void instr_typ_ds(char *bin_instr)
     XO = bin_to_int(sXO);
 
     // Load doubleword
-    if(PO == 58 && XO == 0)
+    if (PO == 58 && XO == 0)
     {
-        int ctr = 0;
-        struct symbol_table_data *temp;
-        temp = sym_tab_data_head;
         int target_address = R[RA] + DS;
-        while(temp != NULL)
-        {
-            if(ctr == target_address)
-            {
-                int32_t low, high;
-                sscanf(temp->data, "%"PRId32"", &low);
-                temp=temp->next;
-                if(temp == NULL)
-                {
-                    high = 0;
-                    R[RT] = ((int64_t)high) << 32 | low;
-                    break;
-                }
-                sscanf(temp->data, "%"PRId32"", &high);
-                R[RT] = ((int64_t)high) << 32 | low;
-            }
-            ctr++;
-            temp = temp->next;
-        }
+        int32_t low, high;
+        sscanf(MainMemory[target_address], "%" PRId32 "", &low);
+        sscanf(MainMemory[target_address + 1], "%" PRId32 "", &high);
+        R[RT] = ((int64_t)high) << 32 | low;
     }
 
-    if(PO == 62 && XO == 0)
+    if (PO == 62 && XO == 0)
     {
         int ctr = 0;
         char highstr[20], lowstr[20];
-        struct symbol_table_data *temp;
-        temp = sym_tab_data_head;
         int target_address = R[RA] + DS;
-        while(temp != NULL)
-        {
-            if(ctr == target_address - 1 || (ctr == target_address && target_address == 0))
-            {
-                struct symbol_table_data *s_temp1, *s_temp2;
-				s_temp1 = (struct symbol_table_data *)malloc(sizeof(struct symbol_table_data));
-                s_temp2 = (struct symbol_table_data *)malloc(sizeof(struct symbol_table_data));
-                s_temp1->label = NULL;
-                s_temp1->type = NULL;
-                s_temp2->label = NULL;
-                s_temp2->type = NULL;
-                int32_t high, low;
-                high = (int32_t)((R[RT] & 0xFFFFFFFF00000000LL) >> 32);
-                low = (int32_t)(R[RT] & 0xFFFFFFFFLL);
-                sprintf(highstr, "%"PRId32"", high);
-                sprintf(lowstr, "%"PRId32"", low);
-                printf("high:%s  low:%s\n", highstr, lowstr);
-                s_temp1->data = highstr;
-                s_temp2->data = lowstr;
-                if(target_address == 0)
-                {
-                    s_temp2->next = s_temp1;
-                    s_temp1->next = temp;
-                    sym_tab_data_head = s_temp2;
-                    break;
-                }
-                s_temp2->next = s_temp1;
-                s_temp1->next = temp->next;
-                temp->next = s_temp2;
-                break;
-            }
-            ctr++;
-            temp = temp->next;
-        }
-
-        temp = sym_tab_data_head;
-        while(temp!=NULL)
-        {
-            printf("data:%s\n", temp->data);
-            temp = temp->next;
-        }
+        int32_t high, low;
+        high = (int32_t)((R[RT] & 0xFFFFFFFF00000000LL) >> 32);
+        low = (int32_t)(R[RT] & 0xFFFFFFFFLL);
+        sprintf(highstr, "%" PRId32 "", high);
+        sprintf(lowstr, "%" PRId32 "", low);
+        strcpy(MainMemory[target_address + 1], highstr);
+        strcpy(MainMemory[target_address], lowstr);
     }
 }

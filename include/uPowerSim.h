@@ -1,6 +1,6 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<inttypes.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <inttypes.h>
 
 #ifndef UPOWERSIM_H
 #define UPOWERSIM_H
@@ -29,7 +29,6 @@ struct instr_line
 {
     char *asm_line;
 };
-
 
 /*
 Symbol table is used to store pointers to labels.
@@ -75,7 +74,6 @@ struct line f_lines[100];
 struct instr_line i_lines[100];
 int n_lines, n_instr;
 
-
 //Functions
 void parse_command(char *argv[]);
 void read_asm(void);
@@ -86,21 +84,20 @@ int parse_line(char *);
 int translate_instruction(char *args[]);
 char check_instruction_type(char *inst);
 
-
-char* register_translator(char* t);
-void src_trgts_reg_translate_for_x_format(char* instr_v[], char *);
-char* and(int instr_c, char *instr_v[]);
-char* nand(int instr_c, char *instr_v[]);
-char* or(int instr_c, char *instr_v[]);
-char* xor(int instr_c, char *instr_v[]);
-char* extsw(int instr_c, char *instr_v[]);
-char* sld(int instr_c, char *instr_v[]);
-char* srd(int instr_c, char *instr_v[]);
-char* srad(int instr_c, char *instr_v[]);
-char* add(int instr_c, char *instr_v[]);
-char* addi(int instr_c, char *instr_v[]);
-char* beq(int instr_c, char *instr_v[], int curr_addr);
-char* subf(int instr_c, char *instr_v[]);
+char *register_translator(char *t);
+void src_trgts_reg_translate_for_x_format(char *instr_v[], char *);
+char * and (int instr_c, char *instr_v[]);
+char *nand(int instr_c, char *instr_v[]);
+char * or (int instr_c, char *instr_v[]);
+char * xor (int instr_c, char *instr_v[]);
+char *extsw(int instr_c, char *instr_v[]);
+char *sld(int instr_c, char *instr_v[]);
+char *srd(int instr_c, char *instr_v[]);
+char *srad(int instr_c, char *instr_v[]);
+char *add(int instr_c, char *instr_v[]);
+char *addi(int instr_c, char *instr_v[]);
+char *beq(int instr_c, char *instr_v[], int curr_addr);
+char *subf(int instr_c, char *instr_v[]);
 char *ld(int instr_c, char *instr_v[]);
 char *std(int instr_c, char *instr_v[]);
 char *translate_instr(char *instr, int cia);

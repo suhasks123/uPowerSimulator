@@ -1,9 +1,10 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<inttypes.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <inttypes.h>
 
 #ifndef SIMULATOR_H
 #define SIMULATOR_H
+
 // Registers
 int64_t R[32];
 int64_t LR, CIA, NIA, SRR0;
@@ -19,17 +20,18 @@ struct bin_line
 struct bin_line bin_lines[100];
 
 // Main Memory
-int MainMemory[100];
+char MainMemory[100][100];
 
 // Functions
 void initialize();
 void read_bin();
-int bin_to_int(char* bin);
+int bin_to_int(char *bin);
 void instr_typ_x(char *bin_instr);
 void instr_typ_ds(char *bin_instr);
 void instr_typ_d(char *bin_instr);
 int instr_typ_b(char *bin_instr);
 void instr_typ_xo(char *bin_instr);
 void display_registers();
+void load_memory();
 
 #endif
