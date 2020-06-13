@@ -10,7 +10,7 @@
 void initialize()
 {
     CIA = 0;
-    NIA = 1;
+    NIA = 0;
     char ch;
     int displacement;
     read_bin();
@@ -58,12 +58,12 @@ void initialize()
         {
             instr_typ_ds(bin_lines[CIA].instr);
         }
-
-        CIA += displacement;
+        NIA += displacement;
         if (ch == 'y')
         {
             display_registers();
         }
+        CIA += displacement;
     }
     return;
 }
